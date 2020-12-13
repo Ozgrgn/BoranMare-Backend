@@ -1,0 +1,20 @@
+{
+  "name": "boranmare",
+  "version": "1.0.0",
+  "description": "boranmare",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jay jay okocha",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-query-boolean": "^2.0.0",
+    "express-validator": "^6.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "mongoose": "^5.11.7"
+  }
+}
