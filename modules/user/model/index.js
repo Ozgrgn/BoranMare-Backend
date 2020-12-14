@@ -13,7 +13,13 @@ const UserSchema = new mongoose.Schema(
     balance: { type: Number, required: false },
     fullName: { type: String, required: true },
     email: { type: String, required: true },
-    country: [{ type: ObjectId, ref: "Countries", required: false }],
+    emailAuthCode: { type: String, required: false },
+    country: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "countries",
+      required: false,
+    },
+
     userType: {
       type: String,
       enum: [

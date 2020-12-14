@@ -36,6 +36,7 @@ app.all("/*", function (req, res, next) {
 //routes
 const userRouter = require("./modules/user/routes");
 const countryRouter = require("./modules/country/routes");
+const authRouter = require("./modules/auth/routes");
 
 //////////////
 //////////////
@@ -44,6 +45,7 @@ const countryRouter = require("./modules/country/routes");
 
 app.use("/user", userRouter);
 app.use("/country", countryRouter);
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.status(200).end("API is work");

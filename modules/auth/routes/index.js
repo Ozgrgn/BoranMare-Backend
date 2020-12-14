@@ -6,12 +6,19 @@ const { body } = require("express-validator");
 const { validator } = require("../../middlewares");
 
 router.post(
-  "/signup-email",
+  "/signup",
   body("email").exists().isEmail(),
-  body(["username", "password", "fullName","userType"]).exists().isString(),
+  body(["username", "password", "fullName", "userType"]).exists().isString(),
   body("country").exists().isMongoId(),
   validator,
   AuthController.signup
+);
+
+router.post(
+  "/signup-verify",
+  body(["userId", "code"]).exists().isString(),
+  validator,
+  AuthController.signupVerify
 );
 
 module.exports = router;

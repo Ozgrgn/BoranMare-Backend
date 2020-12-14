@@ -1,6 +1,11 @@
 {
-    "mongoUrl" : "mongodb://localhost:27017/boranmare",
-    "jwtConfig" : {
-        "secret" : "aysetatileciksin"
-    }
+  "globalName": "Boran Global",
+  "mongoUrl": "mongodb://localhost:27017/boranmare",
+  "jwtConfig": {
+    "secret": "aysetatileciksin"
+  },
+  "auth": {
+    "user": "fullstackdeveloper@onlinegamingsoft.com",
+    "pass": "Ac102025854"
+  }
 }
