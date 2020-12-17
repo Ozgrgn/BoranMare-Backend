@@ -21,4 +21,11 @@ router.post(
   AuthController.signupVerify
 );
 
+router.post(
+  "/login",
+  body(["username", "password"]).exists().isString(),
+  validator,
+  AuthController.login
+);
+
 module.exports = router;

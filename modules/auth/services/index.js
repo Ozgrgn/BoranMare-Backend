@@ -6,7 +6,8 @@ const {
 } = require("../../user/model/index");
 const MailService = require("../../mail/services");
 const mailConfig = require("../../../config.json");
-
+const jsonwebtoken = require("jsonwebtoken");
+const jwtSecretKey = require("../../../config.json").jwtConfig.secret;
 const promiseHandler = require("../../utilities/promiseHandler");
 const cryptoRandomString = require("crypto-random-string");
 const signup = async (user) => {
@@ -60,19 +61,37 @@ const signupVerify = async (info) => {
   }
 
   if (user.emailAuthCode === info.code) {
-    const updatedUser = await User.updateOne(
-      { _id: info.userId },
-      { ...user, userStatus: STATUS_CONFIRMED }
-    );
+    user.userStatus = STATUS_CONFIRMED;
+    await user.save();
 
-    return updatedUser;
+    return user;
   } else {
     throw new Error("Code is wrong");
   }
+};
+
+const login = async (username, password) => {
+  const user = await User.findOne({ username });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const compare = await bcrypt.compare(password, user.password);
+  if (!compare) {
+    throw new Error("Wrong password");
+  }
+
+  const token = await jsonwebtoken.sign(
+    { username, userId: user._id },
+    jwtSecretKey
+  );
+
+  return { token, username, userId: user._id, fullName: user.fullName };
 };
 module.exports = {
   signup,
   checkPassword,
   hashPassword,
   signupVerify,
+  login,
 };

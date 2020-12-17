@@ -36,6 +36,7 @@ app.all("/*", function (req, res, next) {
 //routes
 const userRouter = require("./modules/user/routes");
 const countryRouter = require("./modules/country/routes");
+const reservationRouter = require("./modules/reservation/routes");
 const authRouter = require("./modules/auth/routes");
 
 //////////////
@@ -45,6 +46,7 @@ const authRouter = require("./modules/auth/routes");
 
 app.use("/user", userRouter);
 app.use("/country", countryRouter);
+app.use("/reservation", reservationRouter);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {

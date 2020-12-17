@@ -1,5 +1,5 @@
 {
-  "globalName": "Boran Global",
+  "globalName": "Boran Bonus",
   "mongoUrl": "mongodb://localhost:27017/boranmare",
   "jwtConfig": {
     "secret": "aysetatileciksin"
