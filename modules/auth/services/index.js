@@ -11,6 +11,12 @@ const jwtSecretKey = require("../../../config.json").jwtConfig.secret;
 const promiseHandler = require("../../utilities/promiseHandler");
 const cryptoRandomString = require("crypto-random-string");
 const signup = async (user) => {
+  const findUser = User.findOne({ email: findUuser.email });
+
+  if (findUser) {
+    throw new Error("There is such a user");
+  }
+
   const password = await hashPassword(user.password);
   const code = cryptoRandomString({ length: 6, type: "numeric" });
   const savedUser = await new User({
@@ -36,7 +42,7 @@ const signup = async (user) => {
     return { status: false, message: mail_err };
   }
 
-  return savedUser;
+  return { _id: savedUser._id };
 };
 
 const hashPassword = async (password) => {
@@ -62,9 +68,10 @@ const signupVerify = async (info) => {
 
   if (user.emailAuthCode === info.code) {
     user.userStatus = STATUS_CONFIRMED;
+    user.emailAuthCode = undefined;
     await user.save();
 
-    return user;
+    return { message: "Registiration is success." };
   } else {
     throw new Error("Code is wrong");
   }
