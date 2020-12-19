@@ -11,7 +11,7 @@ const jwtSecretKey = require("../../../config.json").jwtConfig.secret;
 const promiseHandler = require("../../utilities/promiseHandler");
 const cryptoRandomString = require("crypto-random-string");
 const signup = async (user) => {
-  const findUser = User.findOne({ email: findUuser.email });
+  const findUser = await User.findOne({ email: user.email });
 
   if (findUser) {
     throw new Error("There is such a user");

@@ -1,11 +1,11 @@
 {
   "globalName": "Boran Bonus",
-  "mongoUrl": "mongodb://localhost:27017/boranmare",
+  "mongoUrl": "mongodb+srv://boranbonus:Ac102025854@boranmongocluster.rv40x.mongodb.net/boranglobal?retryWrites=true&w=majority",
   "jwtConfig": {
     "secret": "aysetatileciksin"
   },
   "auth": {
-    "user": "fullstackdeveloper@onlinegamingsoft.com",
-    "pass": "Ac102025854"
+    "user": "info@boranbonus.com",
+    "pass": "1234QWER"
   }
 }
