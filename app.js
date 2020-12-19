@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
   res.status(200).end("API is work");
 });
 
-http.listen(3000, (error) => {
+http.listen(process.env.PORT || 5000, (error) => {
   if (error) {
     throw error;
   }
