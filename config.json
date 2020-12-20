@@ -6,6 +6,7 @@
   },
   "auth": {
     "user": "info@boranbonus.com",
-    "pass": "1234QWER"
+    "pass": "1234QWER",
+    "reservation": "reservation@boranbonus.com"
   }
 }

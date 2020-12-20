@@ -57,5 +57,5 @@ http.listen(process.env.PORT || 5000, (error) => {
   if (error) {
     throw error;
   }
-  console.log("listening on *:3000");
+  console.log(`listening on ${process.env.PORT || 5000}`);
 });

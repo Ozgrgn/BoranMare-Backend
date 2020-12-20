@@ -12,6 +12,40 @@ const ACCOUNT_VERIFICATION_CODE_MAIL = function (params) {
   };
 };
 
+const RESERVATION_MAIL = function (params) {
+  const { voucherId, roomType, checkIn, checkOut, agency } = params;
+  if (!voucherId || !roomType || !checkIn || !checkOut || !agency) {
+    throw new Error("Missing parameters");
+  }
+  return {
+    subject: "New Reservation",
+    html: `
+    <table>
+    <thead>
+      <tr>
+        <td  style="padding-left: 20px;"><strong>Voucher NO</strong></td>
+        <td  style="padding-left: 20px;"><strong>Room Type</strong></td>
+        <td  style="padding-left: 20px;"><strong>Check In Date</strong></td>
+        <td  style="padding-left: 20px;"><strong>Check Out Date</strong></td>
+        <td  style="padding-left: 20px;"><strong>Agency</strong></td>
+        <td  style="padding-left: 20px;"><strong>Agency Mail</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td  style="padding-left: 20px;">${voucherId}</td>
+        <td  style="padding-left: 20px;">${roomType}</td>
+        <td  style="padding-left: 20px;">${checkIn}</td>
+        <td  style="padding-left: 20px;">${checkOut}</td>
+        <td  style="padding-left: 20px;">${agency.fullName}</td>
+        <td  style="padding-left: 20px;">${agency.email}</td>
+      </tr>
+    </tbody>
+  </table>
+  `,
+  };
+};
+
 // HANDLERS
 async function sendMail(options) {
   const { to, mailOptions, from } = options;
@@ -43,4 +77,5 @@ async function sendMail(options) {
 module.exports = {
   sendMail,
   ACCOUNT_VERIFICATION_CODE_MAIL,
+  RESERVATION_MAIL
 };
