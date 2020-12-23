@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 const STATUS = {
-  STATUS_PENDING: "PENDING",
-  STATUS_CONFIRMED: "CONFIRMED",
-  STATUS_DECLINED: "DECLINED",
+  STATUS_PENDING: "BELKLEMEDE",
+  STATUS_CONFIRMED: "ONAYLANDI",
+  STATUS_DECLINED: "REDDEDİLDİ",
+  STATUS_NOTINFORMED:"OPERATORDEN GELMEDİ",
+  STATUS_INSIDE:"MİSAFİR İÇERİDE",
+  STATUS_STATUS_GONE: "MİSAFİR GİTTİ"
 };
 const ReservationSchema = new mongoose.Schema(
   {
     voucherId: { type: String, required: true },
-    // reservationNo: {type:Number,required:true},
     operator: {type: String, required: true },
     roomType: { type: String, required: true },
     reservationDate: { type: String },
@@ -25,6 +27,10 @@ const ReservationSchema = new mongoose.Schema(
         STATUS.STATUS_CONFIRMED,
         STATUS.STATUS_DECLINED,
         STATUS.STATUS_PENDING,
+        STATUS.STATUS_NOTINFORMED,
+        STATUS.STATUS_INSIDE,
+        STATUS.STATUS_GONE,
+
       ],
       default: STATUS.STATUS_PENDING,
     },
