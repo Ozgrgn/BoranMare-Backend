@@ -8,7 +8,8 @@ const { validator } = require("../../middlewares");
 router.post(
   "/signup",
   body("email").exists().isEmail(),
-  body(["username", "password", "fullName", "userType"]).exists().isString(),
+  body("phone").exists().isMobilePhone(),
+  body(["username", "password", "fullName", "userType","name",]).exists().isString(),
   body("country").exists().isMongoId(),
   validator,
   AuthController.signup

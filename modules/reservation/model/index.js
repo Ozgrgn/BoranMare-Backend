@@ -7,9 +7,17 @@ const STATUS = {
 const ReservationSchema = new mongoose.Schema(
   {
     voucherId: { type: String, required: true },
+    // reservationNo: {type:Number,required:true},
+    operator: {type: String, required: true },
     roomType: { type: String, required: true },
+    reservationDate: { type: String },
     checkIn: { type: String, required: true },
     checkOut: { type: String, required: true },
+    adultPax:{type:Number, required: true},
+    child1Pax:{type:Number},
+    child2Pax:{type:Number},
+    names :String,
+    notes:String,
     reservationStatus: {
       type: String,
 
@@ -20,6 +28,9 @@ const ReservationSchema = new mongoose.Schema(
       ],
       default: STATUS.STATUS_PENDING,
     },
+    approvedStatus:{ type: Boolean,
+      default:false},
+      
     agency: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
