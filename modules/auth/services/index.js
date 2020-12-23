@@ -89,11 +89,15 @@ const login = async (username, password) => {
   }
 
   const token = await jsonwebtoken.sign(
-    { username, userId: user._id },
+    { username, userId: user._id, userType: user.userType },
     jwtSecretKey
   );
 
   return { token, username, userId: user._id, fullName: user.fullName };
+};
+
+const permission = async (userId) => {
+  return User.findOne({ _id: userId }, "userType");
 };
 module.exports = {
   signup,
@@ -101,4 +105,5 @@ module.exports = {
   hashPassword,
   signupVerify,
   login,
+  permission,
 };

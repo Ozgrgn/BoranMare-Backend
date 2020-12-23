@@ -1,25 +1,25 @@
 const mongoose = require("mongoose");
 const STATUS = {
-  STATUS_PENDING: "BELKLEMEDE",
-  STATUS_CONFIRMED: "ONAYLANDI",
-  STATUS_DECLINED: "REDDEDİLDİ",
-  STATUS_NOTINFORMED:"OPERATORDEN GELMEDİ",
-  STATUS_INSIDE:"MİSAFİR İÇERİDE",
-  STATUS_STATUS_GONE: "MİSAFİR GİTTİ"
+  STATUS_PENDING: "PENDING",
+  STATUS_CONFIRMED: "CONFIRMED",
+  STATUS_DECLINED: "DECLINED",
+  STATUS_NOTINFORMED: "NOTINFORMED",
+  STATUS_INSIDE: "INSIDE",
+  STATUS_STATUS_GONE: "GONE",
 };
 const ReservationSchema = new mongoose.Schema(
   {
     voucherId: { type: String, required: true },
-    operator: {type: String, required: true },
+    operator: { type: String, required: true },
     roomType: { type: String, required: true },
     reservationDate: { type: String },
     checkIn: { type: String, required: true },
     checkOut: { type: String, required: true },
-    adultPax:{type:Number, required: true},
-    child1Pax:{type:Number},
-    child2Pax:{type:Number},
-    names :String,
-    notes:String,
+    adultPax: { type: Number, required: true },
+    child1Pax: { type: Number },
+    child2Pax: { type: Number },
+    names: String,
+    notes: String,
     reservationStatus: {
       type: String,
 
@@ -30,13 +30,11 @@ const ReservationSchema = new mongoose.Schema(
         STATUS.STATUS_NOTINFORMED,
         STATUS.STATUS_INSIDE,
         STATUS.STATUS_GONE,
-
       ],
       default: STATUS.STATUS_PENDING,
     },
-    approvedStatus:{ type: Boolean,
-      default:false},
-      
+    approvedStatus: { type: Boolean, default: false },
+
     agency: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",

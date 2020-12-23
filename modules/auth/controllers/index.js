@@ -32,8 +32,21 @@ const login = async (req, res) => {
   }
   return res.json({ status: true, ...login });
 };
+
+const permission = async (req, res) => {
+  const { userId } = req.user;
+
+  const [permission_err, permission] = await promiseHandler(
+    AuthService.permission(userId)
+  );
+  if (permission_err) {
+    return res.json({ status: false, message: permission_err });
+  }
+  return res.json({ status: true,  userType : permission.userType });
+};
 module.exports = {
   signup,
   signupVerify,
   login,
+  permission,
 };

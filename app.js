@@ -50,7 +50,7 @@ app.use("/reservation", reservationRouter);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
-  res.status(200).end("API is work");
+  res.json({})
 });
 
 http.listen(process.env.PORT || 5000, (error) => {

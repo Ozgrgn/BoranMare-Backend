@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const AuthController = require("../controllers");
-
+const AuthModel = require("../model/index");
 const { body } = require("express-validator");
 const { validator } = require("../../middlewares");
+const routeGuard = require("../middlewares/guard");
 
 router.post(
   "/signup",
@@ -27,6 +28,19 @@ router.post(
   body(["username", "password"]).exists().isString(),
   validator,
   AuthController.login
+);
+
+router.get(
+  "/permission",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  validator,
+  AuthController.permission
 );
 
 module.exports = router;
