@@ -5,7 +5,7 @@ const getUsers = async () => {
 };
 
 const getUserWithById = async (userId) => {
-  return User.findById(userId);
+  return User.findById(userId).populate("country").exec();
 };
 module.exports = {
   getUserWithById,

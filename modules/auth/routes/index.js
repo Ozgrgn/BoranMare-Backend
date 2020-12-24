@@ -5,6 +5,7 @@ const AuthModel = require("../model/index");
 const { body } = require("express-validator");
 const { validator } = require("../../middlewares");
 const routeGuard = require("../middlewares/guard");
+const { models } = require("mongoose");
 
 router.post(
   "/signup",
@@ -42,5 +43,7 @@ router.get(
   validator,
   AuthController.permission
 );
+
+
 
 module.exports = router;
