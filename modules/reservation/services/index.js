@@ -1,12 +1,17 @@
 const { Reservation } = require("../model/index");
 const MailService = require("../../mail/services");
 const UserService = require("../../user/services");
+const RoomService = require("../../room/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const addReservation = async (reservationDetails) => {
   const reservation = await new Reservation(reservationDetails).save();
+  const room = await RoomService.getRoomWithById(reservation.room);
   const agency = await UserService.getUserWithById(reservation.agency);
 
+  if (!room || !agency) {
+    throw new Error("Logical error reservation controller addReservation");
+  }
   const [mail_err, mail] = await promiseHandler(
     MailService.sendMail({
       to: mailConfig.auth.reservation,
@@ -15,7 +20,7 @@ const addReservation = async (reservationDetails) => {
         type: MailService.RESERVATION_MAIL,
         params: {
           voucherId: reservation.voucherId,
-          roomType: reservation.roomType,
+          room: room.title,
           checkIn: beautifyDate(reservation.checkIn),
           checkOut: beautifyDate(reservation.checkOut),
           agency,

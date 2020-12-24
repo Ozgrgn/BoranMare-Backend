@@ -11,7 +11,11 @@ const ReservationSchema = new mongoose.Schema(
   {
     voucherId: { type: String, required: true },
     operator: { type: String, required: true },
-    roomType: { type: String, required: true },
+    room: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "rooms",
+      required: true,
+    },
     reservationDate: { type: String },
     checkIn: { type: String, required: true },
     checkOut: { type: String, required: true },
@@ -38,7 +42,7 @@ const ReservationSchema = new mongoose.Schema(
     agency: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: false,
+      required: true,
     },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

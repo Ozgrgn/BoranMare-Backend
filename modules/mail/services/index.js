@@ -13,8 +13,8 @@ const ACCOUNT_VERIFICATION_CODE_MAIL = function (params) {
 };
 
 const RESERVATION_MAIL = function (params) {
-  const { voucherId, roomType, checkIn, checkOut, agency } = params;
-  if (!voucherId || !roomType || !checkIn || !checkOut || !agency) {
+  const { voucherId, room, checkIn, checkOut, agency } = params;
+  if (!voucherId || !room || !checkIn || !checkOut || !agency) {
     throw new Error("Missing parameters");
   }
   return {
@@ -34,7 +34,7 @@ const RESERVATION_MAIL = function (params) {
     <tbody>
       <tr>
         <td  style="padding-left: 20px;">${voucherId}</td>
-        <td  style="padding-left: 20px;">${roomType}</td>
+        <td  style="padding-left: 20px;">${room}</td>
         <td  style="padding-left: 20px;">${checkIn}</td>
         <td  style="padding-left: 20px;">${checkOut}</td>
         <td  style="padding-left: 20px;">${agency.fullName}</td>
@@ -77,5 +77,5 @@ async function sendMail(options) {
 module.exports = {
   sendMail,
   ACCOUNT_VERIFICATION_CODE_MAIL,
-  RESERVATION_MAIL
+  RESERVATION_MAIL,
 };

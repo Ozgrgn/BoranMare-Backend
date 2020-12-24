@@ -36,6 +36,8 @@ app.all("/*", function (req, res, next) {
 //routes
 const userRouter = require("./modules/user/routes");
 const countryRouter = require("./modules/country/routes");
+const dealRouter = require("./modules/deal/routes");
+const roomRouter = require("./modules/room/routes");
 const reservationRouter = require("./modules/reservation/routes");
 const authRouter = require("./modules/auth/routes");
 
@@ -46,11 +48,13 @@ const authRouter = require("./modules/auth/routes");
 
 app.use("/user", userRouter);
 app.use("/country", countryRouter);
+app.use("/deal", dealRouter);
+app.use("/room", roomRouter);
 app.use("/reservation", reservationRouter);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
-  res.json({})
+  res.json({});
 });
 
 http.listen(process.env.PORT || 5000, (error) => {

@@ -7,9 +7,9 @@ const { validator } = require("../../middlewares");
 
 router.post(
   "/",
-  body(["voucherId", "roomType","operator","names","notes"]).exists().isString(),
-  body(["adultPax","child1Pax","child2Pax"]).exists().isNumeric(),
-  body(["checkIn", "checkOut","reservationDate"]).exists().isISO8601(),
+  body(["voucherId", "room", "operator", "names", "notes"]).exists().isString(),
+  body(["adultPax", "child1Pax", "child2Pax"]).exists().isNumeric(),
+  body(["checkIn", "checkOut", "reservationDate"]).exists().isISO8601(),
   body(["agency"]).exists().isMongoId(),
   validator,
   ReservationController.addReservation
