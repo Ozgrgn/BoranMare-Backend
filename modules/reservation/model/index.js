@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const STATUS = {
-  STATUS_PENDING: "PENDING",
-  STATUS_CONFIRMED: "CONFIRMED",
   STATUS_DECLINED: "DECLINED",
   STATUS_NOTINFORMED: "NOTINFORMED",
   STATUS_INSIDE: "INSIDE",
@@ -28,9 +26,7 @@ const ReservationSchema = new mongoose.Schema(
       type: String,
 
       enum: [
-        STATUS.STATUS_CONFIRMED,
-        STATUS.STATUS_DECLINED,
-        STATUS.STATUS_PENDING,
+         STATUS.STATUS_PENDING,
         STATUS.STATUS_NOTINFORMED,
         STATUS.STATUS_INSIDE,
         STATUS.STATUS_GONE,
