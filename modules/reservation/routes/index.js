@@ -11,9 +11,12 @@ router.post(
   body(["adultPax", "child1Pax", "child2Pax"]).exists().isNumeric(),
   body(["checkIn", "checkOut", "reservationDate"]).exists().isISO8601(),
   body(["agency"]).exists().isMongoId(),
+  body(["additionalServices"]).optional().isArray(),
   validator,
   ReservationController.addReservation
 );
 router.get("/", ReservationController.getReservations);
+
+router.get("/balance/:userId", ReservationController.getUserBalanceWithByuserId);
 
 module.exports = router;

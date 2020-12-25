@@ -44,6 +44,8 @@ const ReservationSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
+    resId: { type: Number, default: 3000 },
+    additionalServices: { type: Array, default: [] },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

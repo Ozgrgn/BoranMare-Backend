@@ -5,9 +5,10 @@ const getUsers = async () => {
 };
 
 const getUserWithById = async (userId) => {
-  return User.findById(userId).populate("country").exec();
+  return User.findById(userId).populate("country");
 };
+
 module.exports = {
-  getUserWithById,
   getUsers,
+  getUserWithById,
 };

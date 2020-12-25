@@ -1,5 +1,6 @@
 const ReservationService = require("../services/index");
 const promiseHandler = require("../../utilities/promiseHandler");
+const { Reservation } = require("../model");
 const addReservation = async (req, res) => {
   const [reservation_err, reservation] = await promiseHandler(
     ReservationService.addReservation(req.body)
@@ -22,7 +23,19 @@ const getReservations = async (req, res) => {
   return res.json({ status: true, reservations });
 };
 
+const getUserBalanceWithByuserId = async (req, res) => {
+  const [balance_err, balance] = await promiseHandler(
+    ReservationService.getUserBalanceWithByuserId(req.params.userId)
+  );
+  if (balance_err) {
+    return res.json({ status: false, message: balance_err });
+  }
+
+  return res.json({ status: true, balance });
+};
+
 module.exports = {
   addReservation,
   getReservations,
+  getUserBalanceWithByuserId,
 };
