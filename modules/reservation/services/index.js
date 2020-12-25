@@ -77,8 +77,8 @@ const getUserBalanceWithByuserId = async (userId) => {
           balance = balance + deal.bonusPrice;
 
           reservation.additionalServices.map((service) => {
-            if (deals[service]) {
-              balance = balance + deals[service];
+            if (deal[service]) {
+              balance = balance + deal[service];
             }
           });
         }
