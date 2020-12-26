@@ -34,8 +34,31 @@ const getUserBalanceWithByuserId = async (req, res) => {
   return res.json({ status: true, balance });
 };
 
+const getReservationWithById = async (req,res) => {
+  const [reservation_err, reservation] = await promiseHandler(
+    ReservationService.getReservationWithById(req.params.reservationId)
+  );
+  if(reservation_err){
+    return res.json({status: false, message:reservation_err});
+  }
+  return res.json({status: true, reservation});
+  };
+  
+  const getUserReservationsWithByUserId = async (req,res) => {
+    const [reservation_err, reservation] = await promiseHandler(
+      ReservationService.getUserReservationsWithByUserId(req.params.userId)
+    );
+    if(reservation_err){
+      return res.json({status: false, message:reservation_err});
+    }
+    return res.json({status: true, reservation});
+    };
+
+
 module.exports = {
   addReservation,
   getReservations,
   getUserBalanceWithByuserId,
+  getReservationWithById,
+  getUserReservationsWithByUserId
 };

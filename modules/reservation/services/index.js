@@ -47,12 +47,22 @@ const addReservation = async (reservationDetails) => {
 const getReservations = async () => {
   return Reservation.find();
 };
-
+const getReservationWithById =async(reservationId) => {
+  return Reservation.findById(reservationId);
+};
 const beautifyDate = (date) => {
   let settedDate = new Date(date);
   return `${settedDate.getFullYear()}-${settedDate.getMonth()}-${settedDate.getDate()}`;
 };
-
+const getUserReservationsWithByUserId = async (userId) => {
+  const user = await UserService.getUserWithById(userId);
+  if (!user) {
+    throw new Error("user is not found");
+  }
+  return Reservation.find({
+    agency: user._id
+  })
+};
 const getUserBalanceWithByuserId = async (userId) => {
   const user = await UserService.getUserWithById(userId);
   if (!user) {
@@ -92,4 +102,6 @@ module.exports = {
   addReservation,
   getReservations,
   getUserBalanceWithByuserId,
+  getReservationWithById,
+  getUserReservationsWithByUserId
 };

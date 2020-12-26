@@ -17,7 +17,11 @@ router.get(
 router.get(
   "/:userId",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER],
+    
   }),
   param("userId").exists().isMongoId(),
   validator,
@@ -29,7 +33,7 @@ router.put(
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
       AuthModel.TYPE_AGENCY,
-      AuthModel.TYPE_REGION_MANAGER,
+      AuthModel.TYPE_REGION_MANAGER
     ],
   }),
   param("userId").exists().isMongoId(),
