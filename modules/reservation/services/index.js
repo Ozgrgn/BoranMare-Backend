@@ -44,10 +44,29 @@ const addReservation = async (reservationDetails) => {
 
   return reservation;
 };
-const getReservations = async () => {
-  return Reservation.find();
+const getReservations = async (query = {}, options = {}) => {
+  const { queryOptions, sortOptions } = options;
+
+  if (query.resId) {
+    query.resId = { $regex: RegExp(query.resId + ".*") };
+  }
+
+  if (query.operator) {
+    query.operator = { $regex: RegExp(query.operator + ".*") };
+  }
+  if (query.voucherId) {
+    query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
+  }
+
+  const reservationsQuery = Reservation.find(query, {}, queryOptions).populate(
+    "room"
+  );
+
+  const reservations = await reservationsQuery.sort(sortOptions).exec();
+  const count = await Reservation.countDocuments(query);
+  return { reservations, count };
 };
-const getReservationWithById =async(reservationId) => {
+const getReservationWithById = async (reservationId) => {
   return Reservation.findById(reservationId);
 };
 const beautifyDate = (date) => {
@@ -60,8 +79,8 @@ const getUserReservationsWithByUserId = async (userId) => {
     throw new Error("user is not found");
   }
   return Reservation.find({
-    agency: user._id
-  })
+    agency: user._id,
+  });
 };
 const getUserBalanceWithByuserId = async (userId) => {
   const user = await UserService.getUserWithById(userId);
@@ -103,5 +122,5 @@ module.exports = {
   getReservations,
   getUserBalanceWithByuserId,
   getReservationWithById,
-  getUserReservationsWithByUserId
+  getUserReservationsWithByUserId,
 };

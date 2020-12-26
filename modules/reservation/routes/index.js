@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 const ReservationController = require("../controllers");
 
-const { body } = require("express-validator");
+const { body, query } = require("express-validator");
 const { validator } = require("../../middlewares");
+const routeGuard = require("../../auth/middlewares/guard");
+const AuthModel = require("../../auth/model/index");
 
 router.post(
   "/",
-  body(["voucherId", "room", "operator" ]).exists().isString(),
+  body(["voucherId", "room", "operator"]).exists().isString(),
   body(["names", "notes"]).optional().isString(),
   body(["adultPax", "child1Pax", "child2Pax"]).optional().toInt().isInt(),
   body(["adultPax"]).exists().toInt().isInt(),
@@ -17,11 +19,33 @@ router.post(
   validator,
   ReservationController.addReservation
 );
-router.get("/", ReservationController.getReservations);
+router.get(
+  "/",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN],
+  }),
 
-router.get("/balance/:userId", ReservationController.getUserBalanceWithByuserId);
-router.get("/:userId", ReservationController.getReservationWithById);
-router.get("/user/:userId", ReservationController.getUserReservationsWithByUserId);
+  query([
+    "resId",
+    "agency",
+    "reservationStatus",
+    "operator",
+    "voucherId",
+    "room",
+    "sort",
+  ])
+    .optional()
+    .isString(),
+  query("approvedStatus").optional().isBoolean(),
+  query(["checkIn", "checkOut", "reservationDate"]).optional().isISO8601(),
+  query(["limit", "skip"]).optional().toInt().isInt(),
+  validator,
+  ReservationController.getReservations
+);
 
+router.get(
+  "/balance/:userId",
+  ReservationController.getUserBalanceWithByuserId
+);
 
 module.exports = router;
