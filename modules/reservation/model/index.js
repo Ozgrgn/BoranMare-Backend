@@ -41,6 +41,12 @@ const ReservationSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
+    country: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "countries",
+      required: false,
+    },
+
     resId: { type: Number, default: 3000 },
     additionalServices: { type: Array, default: [] },
   },

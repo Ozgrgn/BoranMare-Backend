@@ -5,6 +5,7 @@ const RoomService = require("../../room/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
+const CountryService = require("../../country/services")
 const addReservation = async (reservationDetails) => {
   const lastReservation = await Reservation.findOne(
     {},
@@ -15,9 +16,11 @@ const addReservation = async (reservationDetails) => {
   if (lastReservation) {
     reservationDetails.resId = lastReservation.resId + 1;
   }
-  const reservation = await new Reservation(reservationDetails).save();
-  const room = await RoomService.getRoomWithById(reservation.room);
+
   const agency = await UserService.getUserWithById(reservation.agency);
+  const reservation = await new Reservation({ ...reservationDetails, country: agency.country }).save();
+  const room = await RoomService.getRoomWithById(reservation.room);
+
 
   if (!room || !agency) {
     throw new Error("Logical error reservation controller addReservation");
@@ -47,6 +50,7 @@ const addReservation = async (reservationDetails) => {
 const getReservations = async (query = {}, options = {}) => {
   const { queryOptions, sortOptions } = options;
 
+  console.log(query)
   if (query.resId) {
     query.resId = { $regex: RegExp(query.resId + ".*") };
   }

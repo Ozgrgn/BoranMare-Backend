@@ -19,10 +19,12 @@ router.post(
   validator,
   ReservationController.addReservation
 );
+
+
 router.get(
   "/",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN, AuthModel.TYPE_AGENCY, AuthModel.TYPE_REGION_MANAGER],
   }),
 
   query([

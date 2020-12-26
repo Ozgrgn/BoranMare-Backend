@@ -13,6 +13,7 @@ const addReservation = async (req, res) => {
 };
 
 const getReservations = async (req, res) => {
+  const {userType} = req.user
   const {
     resId,
     agency,

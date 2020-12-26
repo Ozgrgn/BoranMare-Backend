@@ -6,7 +6,12 @@ const getCountries = async () => {
   return Country.find();
 };
 
+const getCountryWithById = async(countryId) => {
+  return Country.findById(countryId)
+}
+
 module.exports = {
   addCountry,
   getCountries,
+  getCountryWithById
 };
