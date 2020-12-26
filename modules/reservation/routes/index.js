@@ -20,16 +20,20 @@ router.post(
   ReservationController.addReservation
 );
 
-
 router.get(
   "/",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN, AuthModel.TYPE_AGENCY, AuthModel.TYPE_REGION_MANAGER],
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
   }),
 
   query([
     "resId",
     "agency",
+    "country",
     "reservationStatus",
     "operator",
     "voucherId",
@@ -47,6 +51,13 @@ router.get(
 
 router.get(
   "/balance/:userId",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
   ReservationController.getUserBalanceWithByuserId
 );
 

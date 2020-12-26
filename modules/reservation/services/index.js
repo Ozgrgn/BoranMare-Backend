@@ -5,7 +5,7 @@ const RoomService = require("../../room/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
-const CountryService = require("../../country/services")
+const CountryService = require("../../country/services");
 const addReservation = async (reservationDetails) => {
   const lastReservation = await Reservation.findOne(
     {},
@@ -14,13 +14,15 @@ const addReservation = async (reservationDetails) => {
   );
 
   if (lastReservation) {
-    reservationDetails.resId = lastReservation.resId + 1;
+    reservationDetails.resId = (Number(lastReservation.resId) + 1).toString();
   }
 
-  const agency = await UserService.getUserWithById(reservation.agency);
-  const reservation = await new Reservation({ ...reservationDetails, country: agency.country }).save();
+  const agency = await UserService.getUserWithById(reservationDetails.agency);
+  const reservation = await new Reservation({
+    ...reservationDetails,
+    country: agency.country,
+  }).save();
   const room = await RoomService.getRoomWithById(reservation.room);
-
 
   if (!room || !agency) {
     throw new Error("Logical error reservation controller addReservation");
@@ -47,10 +49,9 @@ const addReservation = async (reservationDetails) => {
 
   return reservation;
 };
-const getReservations = async (query = {}, options = {}) => {
+const getReservations = async (query = {}, options = {}, user) => {
   const { queryOptions, sortOptions } = options;
 
-  console.log(query)
   if (query.resId) {
     query.resId = { $regex: RegExp(query.resId + ".*") };
   }
@@ -62,6 +63,16 @@ const getReservations = async (query = {}, options = {}) => {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
   }
 
+  if (user.userType == "AGENCY") {
+    query.agency = user.userId;
+  }
+  if (user.userType == "REGION_MANAGER") {
+    const getUser = await UserService.getUserWithById(user.userId);
+
+    query.country = getUser.country;
+  }
+
+  console.log(query);
   const reservationsQuery = Reservation.find(query, {}, queryOptions).populate(
     "room"
   );

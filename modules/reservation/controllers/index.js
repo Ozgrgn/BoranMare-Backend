@@ -13,10 +13,9 @@ const addReservation = async (req, res) => {
 };
 
 const getReservations = async (req, res) => {
-  const {userType} = req.user
+  const user = req.user;
   const {
     resId,
-    agency,
     reservationStatus,
     operator,
     voucherId,
@@ -28,12 +27,15 @@ const getReservations = async (req, res) => {
     limit,
     skip,
     sort,
+    agency,
+    country,
   } = req.query;
 
   const reservationsQuery = _.omitBy(
     {
       resId,
       agency,
+      country,
       reservationStatus,
       operator,
       voucherId,
@@ -47,10 +49,14 @@ const getReservations = async (req, res) => {
   );
 
   const [reservations_err, reservations] = await promiseHandler(
-    ReservationService.getReservations(reservationsQuery, {
-      queryOptions: { limit, skip },
-      sortOptions: sort ? JSON.parse(sort) : { reservationDate: -1 },
-    })
+    ReservationService.getReservations(
+      reservationsQuery,
+      {
+        queryOptions: { limit, skip },
+        sortOptions: sort ? JSON.parse(sort) : { reservationDate: -1 },
+      },
+      user
+    )
   );
   if (reservations_err) {
     return res.json({ status: false, message: reservations_err });
