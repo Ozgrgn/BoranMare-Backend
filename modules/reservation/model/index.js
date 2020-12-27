@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const STATUS = {
-  STATUS_DECLINED: "DECLINED",
   STATUS_PENDING: "PENDING",
   STATUS_NOTINFORMED: "NOTINFORMED",
   STATUS_INSIDE: "INSIDE",

@@ -82,7 +82,8 @@ const getReservations = async (query = {}, options = {}, user) => {
   return { reservations, count };
 };
 const getReservationWithById = async (reservationId) => {
-  return Reservation.findById(reservationId);
+  return (await Reservation.findById(reservationId).populate(
+    "room"))
 };
 const beautifyDate = (date) => {
   let settedDate = new Date(date);
@@ -132,10 +133,15 @@ const getUserBalanceWithByuserId = async (userId) => {
     return balance;
   });
 };
+const updateReservationWithById = async (resId, reservation) => {
+  console.log(reservation)
+  return Reservation.findByIdAndUpdate(resId, reservation,{new: true})
+};
 module.exports = {
   addReservation,
   getReservations,
   getUserBalanceWithByuserId,
   getReservationWithById,
   getUserReservationsWithByUserId,
+  updateReservationWithById
 };

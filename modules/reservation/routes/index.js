@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ReservationController = require("../controllers");
 
-const { body, query } = require("express-validator");
+const { body, query, param } = require("express-validator");
 const { validator } = require("../../middlewares");
 const routeGuard = require("../../auth/middlewares/guard");
 const AuthModel = require("../../auth/model/index");
@@ -50,7 +50,21 @@ router.get(
 );
 
 router.get(
-  "/balance/:userId",
+  "/:reservationId",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  ReservationController.getReservationWithById
+);
+
+module.exports = router;
+
+router.get(
+  "/reservations/:userId",
   routeGuard({
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
@@ -61,4 +75,18 @@ router.get(
   ReservationController.getUserBalanceWithByuserId
 );
 
+router.put(
+  "/:reservationId",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param("resId").exists().isMongoId(),
+  body(["reservation"]).exists(),
+  validator,
+  ReservationController.updateReservationById
+);
 module.exports = router;

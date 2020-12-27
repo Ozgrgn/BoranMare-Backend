@@ -96,10 +96,21 @@ const getUserReservationsWithByUserId = async (req, res) => {
   return res.json({ status: true, reservation });
 };
 
+const updateReservationById = async (req, res) => {
+  const [updated_reservation_err, updated_reservation] = await promiseHandler(
+    UserService.updateReservationById(req.params.resId, req.body.reservation)
+  );
+  if (updated_reservation_err) {
+    return res.json({ status: false, message: updated_reservation_err });
+  }
+
+  return res.json({ status: true, updated_reservation });
+};
 module.exports = {
   addReservation,
   getReservations,
   getUserBalanceWithByuserId,
   getReservationWithById,
   getUserReservationsWithByUserId,
+  updateReservationById
 };
