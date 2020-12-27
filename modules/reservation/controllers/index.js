@@ -98,7 +98,7 @@ const getUserReservationsWithByUserId = async (req, res) => {
 
 const updateReservationById = async (req, res) => {
   const [updated_reservation_err, updated_reservation] = await promiseHandler(
-    UserService.updateReservationById(req.params.resId, req.body.reservation)
+    ReservationService.updateReservationById(req.params.reservationId, req.body.reservation)
   );
   if (updated_reservation_err) {
     return res.json({ status: false, message: updated_reservation_err });

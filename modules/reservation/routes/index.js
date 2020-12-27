@@ -84,7 +84,7 @@ router.put(
       AuthModel.TYPE_REGION_MANAGER,
     ],
   }),
-  param("resId").exists().isMongoId(),
+  param("reservationId").exists().isMongoId(),
   body(["reservation"]).exists(),
   validator,
   ReservationController.updateReservationById

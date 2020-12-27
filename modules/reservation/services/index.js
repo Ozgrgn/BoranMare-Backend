@@ -133,9 +133,9 @@ const getUserBalanceWithByuserId = async (userId) => {
     return balance;
   });
 };
-const updateReservationWithById = async (resId, reservation) => {
+const updateReservationById = async (reservationId, reservation) => {
   console.log(reservation)
-  return Reservation.findByIdAndUpdate(resId, reservation,{new: true})
+  return Reservation.findByIdAndUpdate(reservationId, reservation,{new: true})
 };
 module.exports = {
   addReservation,
@@ -143,5 +143,5 @@ module.exports = {
   getUserBalanceWithByuserId,
   getReservationWithById,
   getUserReservationsWithByUserId,
-  updateReservationWithById
+  updateReservationById
 };
