@@ -98,7 +98,10 @@ const getUserReservationsWithByUserId = async (req, res) => {
 
 const updateReservationById = async (req, res) => {
   const [updated_reservation_err, updated_reservation] = await promiseHandler(
-    ReservationService.updateReservationById(req.params.reservationId, req.body.reservation)
+    ReservationService.updateReservationById(
+      req.params.reservationId,
+      req.body.reservation
+    )
   );
   if (updated_reservation_err) {
     return res.json({ status: false, message: updated_reservation_err });
@@ -106,11 +109,57 @@ const updateReservationById = async (req, res) => {
 
   return res.json({ status: true, updated_reservation });
 };
+
+const disableReservationWithById = async (req, res) => {
+  const { reservationId } = req.params;
+
+  const [err, reservation] = await promiseHandler(
+    ReservationService.getReservationWithById(reservationId)
+  );
+
+  if (err) {
+    return res.json({ status: false, message: err });
+  }
+
+  const [reservation_err, updated_res] = await promiseHandler(
+    ReservationService.disableReservationWithById(reservationId)
+  );
+
+  if (reservation_err) {
+    return res.json({ status: false, message: reservation_err });
+  }
+
+  return res.json({ status: true });
+};
+
+const enableReservationWithById = async (req, res) => {
+  const { reservationId } = req.params;
+
+  const [err, reservation] = await promiseHandler(
+    ReservationService.getReservationWithById(reservationId)
+  );
+
+  if (err) {
+    return res.json({ status: false, message: err });
+  }
+
+  const [reservation_err, updated_res] = await promiseHandler(
+    ReservationService.enableReservationWithById(reservationId)
+  );
+
+  if (reservation_err) {
+    return res.json({ status: false, message: reservation_err });
+  }
+
+  return res.json({ status: true });
+};
 module.exports = {
   addReservation,
   getReservations,
   getUserBalanceWithByuserId,
   getReservationWithById,
   getUserReservationsWithByUserId,
-  updateReservationById
+  updateReservationById,
+  disableReservationWithById,
+  enableReservationWithById,
 };

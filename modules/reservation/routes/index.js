@@ -89,4 +89,19 @@ router.put(
   validator,
   ReservationController.updateReservationById
 );
+
+router.get(
+  "/:reservationId/disable",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN],
+  }),
+  ReservationController.disableReservationWithById
+);
+router.get(
+  "/:reservationId/enable",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN],
+  }),
+  ReservationController.enableReservationWithById
+);
 module.exports = router;

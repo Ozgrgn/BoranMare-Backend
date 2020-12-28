@@ -82,8 +82,7 @@ const getReservations = async (query = {}, options = {}, user) => {
   return { reservations, count };
 };
 const getReservationWithById = async (reservationId) => {
-  return (await Reservation.findById(reservationId).populate(
-    "room"))
+  return await Reservation.findById(reservationId).populate("room");
 };
 const beautifyDate = (date) => {
   let settedDate = new Date(date);
@@ -134,8 +133,29 @@ const getUserBalanceWithByuserId = async (userId) => {
   });
 };
 const updateReservationById = async (reservationId, reservation) => {
-  console.log(reservation)
-  return Reservation.findByIdAndUpdate(reservationId, reservation,{new: true})
+  console.log(reservation);
+  return Reservation.findByIdAndUpdate(reservationId, reservation, {
+    new: true,
+  });
+};
+
+const disableReservationWithById = async (reservationId) => {
+  await Reservation.updateOne(
+    { _id: reservationId },
+    { approvedStatus: false }
+  );
+  return true;
+};
+const enableReservationWithById = async (reservationId) => {
+  await Reservation.updateOne(
+    { _id: reservationId },
+    { approvedStatus: true },
+    {
+      new: true,
+    }
+  );
+
+  return true;
 };
 module.exports = {
   addReservation,
@@ -143,5 +163,7 @@ module.exports = {
   getUserBalanceWithByuserId,
   getReservationWithById,
   getUserReservationsWithByUserId,
-  updateReservationById
+  updateReservationById,
+  disableReservationWithById,
+  enableReservationWithById,
 };
