@@ -32,7 +32,6 @@ router.get(
 
   query([
     "resId",
-    "agency",
     "country",
     "reservationStatus",
     "operator",
@@ -61,10 +60,9 @@ router.get(
   ReservationController.getReservationWithById
 );
 
-module.exports = router;
 
 router.get(
-  "/reservations/:userId",
+  "/balance/:userId",
   routeGuard({
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
@@ -93,15 +91,27 @@ router.put(
 router.get(
   "/:reservationId/disable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,],
+   
   }),
   ReservationController.disableReservationWithById
 );
 router.get(
   "/:reservationId/enable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,],
   }),
   ReservationController.enableReservationWithById
+);
+router.post(
+  "/:reservationId/change-res-status",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN,],
+   
+  }),
+  param("reservationId").exists().isMongoId(),
+  body(["reservationStatus"]).exists(),
+  validator,
+  ReservationController.changeResStatusWithById
 );
 module.exports = router;

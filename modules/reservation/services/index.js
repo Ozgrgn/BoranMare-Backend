@@ -63,6 +63,7 @@ const getReservations = async (query = {}, options = {}, user) => {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
   }
 
+
   if (user.userType == "AGENCY") {
     query.agency = user.userId;
   }
@@ -74,8 +75,7 @@ const getReservations = async (query = {}, options = {}, user) => {
 
   console.log(query);
   const reservationsQuery = Reservation.find(query, {}, queryOptions).populate(
-    "room"
-  );
+    "room").populate("agency");
 
   const reservations = await reservationsQuery.sort(sortOptions).exec();
   const count = await Reservation.countDocuments(query);
@@ -157,6 +157,18 @@ const enableReservationWithById = async (reservationId) => {
 
   return true;
 };
+
+const changeResStatusWithById = async (reservationId,reservationStatus) => {
+
+  await Reservation.updateOne(
+    { _id: reservationId },
+    { reservationStatus: reservationStatus }
+  );
+
+
+  return true;
+
+};
 module.exports = {
   addReservation,
   getReservations,
@@ -166,4 +178,5 @@ module.exports = {
   updateReservationById,
   disableReservationWithById,
   enableReservationWithById,
+  changeResStatusWithById
 };
