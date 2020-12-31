@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const DealController = require("../controllers");
 
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const { validator } = require("../../middlewares");
 
+const routeGuard = require("../../auth/middlewares/guard");
+const AuthModel = require("../../auth/model/index");
 router.post(
   "/",
   body(["startDate", "endDate", "room", "country"]).exists().isString(),
@@ -23,4 +25,13 @@ router.post(
 );
 router.get("/", DealController.getDeals);
 
+router.delete(
+  "/:dealId",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN],
+  }),
+  param("dealId").exists().isMongoId(),
+  validator,
+  DealController.deleteOneDeal
+);
 module.exports = router;

@@ -66,7 +66,6 @@ const getReservations = async (req, res) => {
 };
 
 const getUserBalanceWithByuserId = async (req, res) => {
- 
   const [balance_err, balance] = await promiseHandler(
     ReservationService.getUserBalanceWithByuserId(req.params.userId)
   );
@@ -157,11 +156,11 @@ const enableReservationWithById = async (req, res) => {
 
 const changeResStatusWithById = async (req, res) => {
   const reservationId = req.params.reservationId;
-  const reservationStatus =req.body.reservationStatus;
-console.log(reservationId)
-console.log(reservationStatus)
+  const reservationStatus = req.body.reservationStatus;
+  console.log(reservationId);
+  console.log(reservationStatus);
   const [err, reservation] = await promiseHandler(
-    ReservationService.changeResStatusWithById(reservationId,reservationStatus)
+    ReservationService.changeResStatusWithById(reservationId, reservationStatus)
   );
 
   if (err) {
@@ -169,13 +168,12 @@ console.log(reservationStatus)
   }
 
   const [reservation_err, updated_res] = await promiseHandler(
-    ReservationService.changeResStatusWithById(reservationId,reservationStatus)
+    ReservationService.changeResStatusWithById(reservationId, reservationStatus)
   );
 
   if (reservation_err) {
     return res.json({ status: false, message: reservation_err });
   }
-console.log(reservationStatus)
   return res.json({ status: true });
 };
 
@@ -188,5 +186,5 @@ module.exports = {
   updateReservationById,
   disableReservationWithById,
   enableReservationWithById,
-  changeResStatusWithById
+  changeResStatusWithById,
 };

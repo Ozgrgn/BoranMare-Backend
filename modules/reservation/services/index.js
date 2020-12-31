@@ -5,7 +5,6 @@ const RoomService = require("../../room/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
-const CountryService = require("../../country/services");
 const addReservation = async (reservationDetails) => {
   const lastReservation = await Reservation.findOne(
     {},
@@ -63,7 +62,6 @@ const getReservations = async (query = {}, options = {}, user) => {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
   }
 
-
   if (user.userType == "AGENCY") {
     query.agency = user.userId;
   }
@@ -74,8 +72,9 @@ const getReservations = async (query = {}, options = {}, user) => {
   }
 
   console.log(query);
-  const reservationsQuery = Reservation.find(query, {}, queryOptions).populate(
-    "room").populate("agency");
+  const reservationsQuery = Reservation.find(query, {}, queryOptions)
+    .populate("room")
+    .populate("agency");
 
   const reservations = await reservationsQuery.sort(sortOptions).exec();
   const count = await Reservation.countDocuments(query);
@@ -158,16 +157,13 @@ const enableReservationWithById = async (reservationId) => {
   return true;
 };
 
-const changeResStatusWithById = async (reservationId,reservationStatus) => {
-
+const changeResStatusWithById = async (reservationId, reservationStatus) => {
   await Reservation.updateOne(
     { _id: reservationId },
     { reservationStatus: reservationStatus }
   );
 
-
   return true;
-
 };
 module.exports = {
   addReservation,
@@ -178,5 +174,5 @@ module.exports = {
   updateReservationById,
   disableReservationWithById,
   enableReservationWithById,
-  changeResStatusWithById
+  changeResStatusWithById,
 };
