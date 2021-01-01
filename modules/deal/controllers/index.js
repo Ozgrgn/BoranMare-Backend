@@ -29,8 +29,20 @@ const deleteOneDeal = async (req, res) => {
 
   return res.json({ status: true, deal });
 };
+
+const updateDealWithById = async (req, res) => {
+  const [updated_deal_err, updated_deal] = await promiseHandler(
+    DealService.updateDealWithById(req.params.dealId, req.body.deal)
+  );
+  if (updated_deal_err) {
+    return res.json({ status: false, message: updated_deal_err });
+  }
+
+  return res.json({ status: true, updated_deal });
+};
 module.exports = {
   addDeal,
   getDeals,
   deleteOneDeal,
+  updateDealWithById
 };

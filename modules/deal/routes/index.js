@@ -34,4 +34,15 @@ router.delete(
   validator,
   DealController.deleteOneDeal
 );
+
+router.put(
+  "/:dealId",
+  routeGuard({
+    allowedTypes: [AuthModel.TYPE_ADMIN],
+  }),
+  param("dealId").exists().isMongoId(),
+  body(["deal"]).exists(),
+  validator,
+  DealController.updateDealWithById
+);
 module.exports = router;

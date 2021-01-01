@@ -14,8 +14,13 @@ const deleteOneDeal = async (dealId) => {
 
   return true;
 };
+
+const updateDealWithById = async (dealId, deal) => {
+  return Deal.findByIdAndUpdate(dealId, deal, { new: true });
+};
 module.exports = {
   addDeal,
   getDeals,
   deleteOneDeal,
+  updateDealWithById,
 };
