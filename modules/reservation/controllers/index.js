@@ -157,8 +157,7 @@ const enableReservationWithById = async (req, res) => {
 const changeResStatusWithById = async (req, res) => {
   const reservationId = req.params.reservationId;
   const reservationStatus = req.body.reservationStatus;
-  console.log(reservationId);
-  console.log(reservationStatus);
+
   const [err, reservation] = await promiseHandler(
     ReservationService.changeResStatusWithById(reservationId, reservationStatus)
   );

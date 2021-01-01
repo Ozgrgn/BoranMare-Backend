@@ -9,8 +9,7 @@ const getUserWithById = async (userId) => {
 };
 
 const updateUserWithById = async (userId, user) => {
-  console.log(user)
-  return User.findByIdAndUpdate(userId, user,{new: true})
+  return User.findByIdAndUpdate(userId, user, { new: true });
 };
 module.exports = {
   getUsers,

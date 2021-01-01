@@ -5,6 +5,7 @@ const RoomService = require("../../room/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
+const { Deal } = require("../../deal/model");
 const addReservation = async (reservationDetails) => {
   const lastReservation = await Reservation.findOne(
     {},
@@ -17,6 +18,7 @@ const addReservation = async (reservationDetails) => {
   }
 
   const agency = await UserService.getUserWithById(reservationDetails.agency);
+
   const reservation = await new Reservation({
     ...reservationDetails,
     country: agency.country,
@@ -71,7 +73,6 @@ const getReservations = async (query = {}, options = {}, user) => {
     query.country = getUser.country;
   }
 
-  console.log(query);
   const reservationsQuery = Reservation.find(query, {}, queryOptions)
     .populate("room")
     .populate("agency");
@@ -109,21 +110,19 @@ const getUserBalanceWithByuserId = async (userId) => {
     checkIn: { $lt: new Date().toISOString() },
   });
 
-  const deals = await DealService.getDeals();
   return Promise.all(
-    reservations.map((reservation) => {
-      deals.map((deal) => {
-        if (
-          new Date(reservation.checkIn) > new Date(deal.startDate) &&
-          new Date(reservation.checkIn) < new Date(deal.endDate)
-        ) {
-          balance = balance + deal.bonusPrice;
+    reservations.map(async (reservation) => {
+      const activeDeal = await DealService.getActiveDeal(
+        user._id,
+        reservation.room,
+        reservation.checkIn
+      );
 
-          reservation.additionalServices.map((service) => {
-            if (deal[service]) {
-              balance = balance + deal[service];
-            }
-          });
+      balance = balance + activeDeal.bonusPrice;
+
+      reservation.additionalServices.map((service) => {
+        if (activeDeal[service]) {
+          balance = balance - activeDeal[service];
         }
       });
     })
@@ -132,7 +131,6 @@ const getUserBalanceWithByuserId = async (userId) => {
   });
 };
 const updateReservationById = async (reservationId, reservation) => {
-  console.log(reservation);
   return Reservation.findByIdAndUpdate(reservationId, reservation, {
     new: true,
   });
