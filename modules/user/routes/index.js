@@ -2,15 +2,33 @@ const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers");
 const AuthModel = require("../../auth/model/index");
-const { body, param } = require("express-validator");
+const { body,query, param } = require("express-validator");
 const { validator } = require("../../middlewares");
 const routeGuard = require("../../auth/middlewares/guard");
 
 router.get(
   "/",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
   }),
+  query([
+   
+    "email",
+    "fullName",
+    "name",
+    "phone",
+    "country",
+    "sort",
+    ])
+  .optional()
+  .isString(),
+  query([ 
+    "balance",
+    "limit", 
+    "skip"]).optional().toInt().isInt(),
   validator,
   UserController.getUsers
 );

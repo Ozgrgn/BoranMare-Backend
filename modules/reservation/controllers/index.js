@@ -58,13 +58,13 @@ const getReservations = async (req, res) => {
       user
     )
   );
+  console.log(reservations)
   if (reservations_err) {
     return res.json({ status: false, message: reservations_err });
   }
 
   return res.json({ status: true, ...reservations });
 };
-
 const getUserBalanceWithByuserId = async (req, res) => {
   const [balance_err, balance] = await promiseHandler(
     ReservationService.getUserBalanceWithByuserId(req.params.userId)

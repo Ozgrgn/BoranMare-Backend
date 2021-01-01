@@ -56,14 +56,12 @@ const getReservations = async (query = {}, options = {}, user) => {
   if (query.resId) {
     query.resId = { $regex: RegExp(query.resId + ".*") };
   }
-
   if (query.operator) {
     query.operator = { $regex: RegExp(query.operator + ".*") };
   }
   if (query.voucherId) {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
   }
-
   if (user.userType == "AGENCY") {
     query.agency = user.userId;
   }
@@ -79,6 +77,7 @@ const getReservations = async (query = {}, options = {}, user) => {
 
   const reservations = await reservationsQuery.sort(sortOptions).exec();
   const count = await Reservation.countDocuments(query);
+
   return { reservations, count };
 };
 const getReservationWithById = async (reservationId) => {
