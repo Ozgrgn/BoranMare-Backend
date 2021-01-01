@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const DealController = require("../controllers");
 
-const { body, param } = require("express-validator");
+const { body, param, query } = require("express-validator");
 const { validator } = require("../../middlewares");
 
 const routeGuard = require("../../auth/middlewares/guard");
@@ -44,5 +44,19 @@ router.put(
   body(["deal"]).exists(),
   validator,
   DealController.updateDealWithById
+);
+
+router.get(
+  "/activeDeal",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  query(["agency", "room", "checkIn"]).exists().isString(),
+  validator,
+  DealController.getActiveDeal
 );
 module.exports = router;

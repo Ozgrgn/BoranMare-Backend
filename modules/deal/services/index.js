@@ -1,4 +1,5 @@
 const { Deal } = require("../model/index");
+const UserService = require("../../user/services");
 const addDeal = async (dealDetails) => {
   return new Deal(dealDetails).save();
 };
@@ -18,9 +19,28 @@ const deleteOneDeal = async (dealId) => {
 const updateDealWithById = async (dealId, deal) => {
   return Deal.findByIdAndUpdate(dealId, deal, { new: true });
 };
+
+const getActiveDeal = async (agencyId, room, checkIn) => {
+  let filter = {};
+
+  const agency = await UserService.getUserWithById(agencyId);
+
+  filter.startDate = {
+    $lte: checkIn,
+  };
+
+  filter.endDate = {
+    $gte: checkIn,
+  };
+
+  filter.country = agency.country;
+  filter.room = room;
+  return Deal.findOne(filter);
+};
 module.exports = {
   addDeal,
   getDeals,
   deleteOneDeal,
   updateDealWithById,
+  getActiveDeal,
 };

@@ -17,6 +17,17 @@ const getDeals = async (req, res) => {
 
   return res.json({ status: true, deals });
 };
+const getActiveDeal = async (req, res) => {
+  const { room, agency, checkIn } = req.query;
+  const [deal_err, deal] = await promiseHandler(
+    DealService.getActiveDeal(agency, room, checkIn)
+  );
+  if (deal_err) {
+    return res.json({ status: false, message: deal_err });
+  }
+
+  return res.json({ status: true, deal });
+};
 
 const deleteOneDeal = async (req, res) => {
   const { dealId } = req.params;
@@ -44,5 +55,6 @@ module.exports = {
   addDeal,
   getDeals,
   deleteOneDeal,
-  updateDealWithById
+  updateDealWithById,
+  getActiveDeal,
 };
