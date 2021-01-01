@@ -2,49 +2,46 @@ const UserService = require("../services/index");
 const promiseHandler = require("../../utilities/promiseHandler");
 const _ = require("lodash");
 
-
 const getUsers = async (req, res) => {
   const user = req.user;
-  const{
-  
+  const {
     email,
     fullName,
     name,
     phone,
     country,
     balance,
-    limit, 
+    limit,
     sort,
-    skip
-  } =req.query;
-  const usersQuery=_.omitBy(
+    skip,
+  } = req.query;
+  const usersQuery = _.omitBy(
     {
-    email,
-    fullName,
-    name,
-    phone,
-    country,
-    balance,
- 
+      email,
+      fullName,
+      name,
+      phone,
+      country,
+      balance,
     },
-    (a)=> a === undefined
+    (a) => a === undefined
   );
 
-  const [users_err, users] = await promiseHandler( 
+  const [users_err, users] = await promiseHandler(
     UserService.getUsers(
-    usersQuery,
-    {
-      queryOptions: { limit, skip },
-      sortOptions: sort ? JSON.parse(sort) : { fullName: -1 },
-    },
-    user
-  )
+      usersQuery,
+      {
+        queryOptions: { limit, skip },
+        sortOptions: sort ? JSON.parse(sort) : { fullName: -1 },
+      },
+      user
+    )
   );
-  console.log(users)
+
   if (users_err) {
     return res.json({ status: false, message: users_err });
   }
-  console.log(users)
+
   return res.json({ status: true, ...users });
 };
 

@@ -2,33 +2,19 @@ const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers");
 const AuthModel = require("../../auth/model/index");
-const { body,query, param } = require("express-validator");
+const { body, query, param } = require("express-validator");
 const { validator } = require("../../middlewares");
 const routeGuard = require("../../auth/middlewares/guard");
 
 router.get(
   "/",
   routeGuard({
-    allowedTypes: [
-      AuthModel.TYPE_ADMIN,
-      AuthModel.TYPE_REGION_MANAGER,
-    ],
+    allowedTypes: [AuthModel.TYPE_ADMIN, AuthModel.TYPE_REGION_MANAGER],
   }),
-  query([
-   
-    "email",
-    "fullName",
-    "name",
-    "phone",
-    "country",
-    "sort",
-    ])
-  .optional()
-  .isString(),
-  query([ 
-    "balance",
-    "limit", 
-    "skip"]).optional().toInt().isInt(),
+  query(["email", "fullName", "name", "phone", "country", "sort"])
+    .optional()
+    .isString(),
+  query(["balance", "limit", "skip"]).optional().toInt().isInt(),
   validator,
   UserController.getUsers
 );
@@ -38,8 +24,8 @@ router.get(
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
       AuthModel.TYPE_AGENCY,
-      AuthModel.TYPE_REGION_MANAGER],
-    
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
   }),
   param("userId").exists().isMongoId(),
   validator,
@@ -51,7 +37,7 @@ router.put(
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
       AuthModel.TYPE_AGENCY,
-      AuthModel.TYPE_REGION_MANAGER
+      AuthModel.TYPE_REGION_MANAGER,
     ],
   }),
   param("userId").exists().isMongoId(),

@@ -58,7 +58,7 @@ const getReservations = async (req, res) => {
       user
     )
   );
-  console.log(reservations)
+
   if (reservations_err) {
     return res.json({ status: false, message: reservations_err });
   }
