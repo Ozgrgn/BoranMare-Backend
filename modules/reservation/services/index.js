@@ -71,11 +71,36 @@ const getReservations = async (query = {}, options = {}, user) => {
     query.country = getUser.country;
   }
 
-  const reservationsQuery = Reservation.find(query, {}, queryOptions)
+  const reservations = await Reservation.find(query, {}, queryOptions)
     .populate("room")
-    .populate("agency");
+    .populate("agency")
+    .sort(sortOptions)
+    .lean()
+    .exec();
 
-  const reservations = await reservationsQuery.sort(sortOptions).exec();
+await Promise.all(
+  reservations.map(async(reservation,index)=> {
+    const activeDeal = await DealService.getActiveDeal(
+      reservation['agency']['_id'],
+      reservation.room,
+      reservation.checkIn
+    );
+    const diffTime = Math.abs(
+      new Date(reservation.checkOut) -
+        new Date(reservation.checkIn)
+    );
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+console.log(activeDeal.bonusPrice)
+reservations[index] = {
+  ...reservations[index],
+  resBonus:diffDays*activeDeal.bonusPrice,
+};
+  })
+);
+
+
+
   const count = await Reservation.countDocuments(query);
 
   return { reservations, count };
@@ -116,8 +141,13 @@ const getUserBalanceWithByuserId = async (userId) => {
         reservation.room,
         reservation.checkIn
       );
-
-      balance = balance + activeDeal.bonusPrice;
+      const diffTime = Math.abs(
+        new Date(reservation.checkOut) -
+          new Date(reservation.checkIn)
+      );
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      balance = balance +(diffDays*activeDeal.bonusPrice);
 
       reservation.additionalServices.map((service) => {
         if (activeDeal[service]) {
