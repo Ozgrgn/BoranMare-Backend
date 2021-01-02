@@ -57,8 +57,31 @@ const getUserWithById = async (userId) => {
 const updateUserWithById = async (userId, user) => {
   return User.findByIdAndUpdate(userId, user, { new: true });
 };
+
+const getUsersOnlyIds = async (query = {}) => {
+  console.log( {
+    $match: {
+      ...query,
+    },
+  })
+  return User.aggregate([
+    {
+      $match: {
+        ...query,
+      },
+    },
+
+    {
+      $project: {
+        _id: 0,
+        user: "$_id",
+      },
+    },
+  ]);
+};
 module.exports = {
   getUsers,
   getUserWithById,
   updateUserWithById,
+  getUsersOnlyIds,
 };

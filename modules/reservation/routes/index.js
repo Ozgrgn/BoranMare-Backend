@@ -9,6 +9,13 @@ const AuthModel = require("../../auth/model/index");
 
 router.post(
   "/",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
   body(["voucherId", "room", "operator"]).exists().isString(),
   body(["names", "notes"]).optional().isString(),
   body(["adultPax", "child1Pax", "child2Pax"]).optional().toInt().isInt(),
@@ -60,7 +67,6 @@ router.get(
   ReservationController.getReservationWithById
 );
 
-
 router.get(
   "/balance/:userId",
   routeGuard({
@@ -91,23 +97,21 @@ router.put(
 router.get(
   "/:reservationId/disable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN,],
-   
+    allowedTypes: [AuthModel.TYPE_ADMIN],
   }),
   ReservationController.disableReservationWithById
 );
 router.get(
   "/:reservationId/enable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN,],
+    allowedTypes: [AuthModel.TYPE_ADMIN],
   }),
   ReservationController.enableReservationWithById
 );
 router.post(
   "/:reservationId/change-res-status",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN,],
-   
+    allowedTypes: [AuthModel.TYPE_ADMIN],
   }),
   param("reservationId").exists().isMongoId(),
   body(["reservationStatus"]).exists(),
