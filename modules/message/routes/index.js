@@ -33,4 +33,17 @@ router.get(
   MessageController.getMessages
 );
 
+router.get(
+  "/seen/:messageId/:userId",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param(["messageId", "userId"]).exists(),
+  MessageController.setSeenMessage
+);
+
 module.exports = router;

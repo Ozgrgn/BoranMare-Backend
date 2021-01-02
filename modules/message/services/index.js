@@ -29,8 +29,28 @@ const getMessageWithById = async (messageId) => {
   return Message.findById(messageId).exec();
 };
 
+const setSeenMessage = async (messageId, userId) => {
+  const message = await Message.findById(messageId).exec();
+  if (!message) {
+    throw new Error("message not found!");
+  }
+
+  await Promise.all(
+    message.users.map((u, index) => {
+      if (u.user == userId) {
+        message.users[index] = { user: userId, seen: true };
+      }
+    })
+  );
+
+  await message.save();
+
+  return message;
+};
+
 module.exports = {
   addMessage,
   getMessages,
   getMessageWithById,
+  setSeenMessage,
 };

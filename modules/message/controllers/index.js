@@ -23,7 +23,19 @@ const getMessages = async (req, res) => {
   return res.json({ status: true, messages });
 };
 
+const setSeenMessage = async (req, res) => {
+  const { messageId, userId } = req.params;
+  const [message_err, message] = await promiseHandler(
+    MessageService.setSeenMessage(messageId, userId)
+  );
+  if (message_err) {
+    return res.json({ status: false, message: message_err });
+  }
+
+  return res.json({ status: true, message });
+};
 module.exports = {
   addMessage,
   getMessages,
+  setSeenMessage,
 };
