@@ -57,7 +57,7 @@ const getReservations = async (query = {}, options = {}, user) => {
     query.resId = { $regex: RegExp(query.resId + ".*") };
   }
   if (query.operator) {
-    query.operator = { $regex: RegExp(query.operator + ".*") };
+    query.operator = { $regex: RegExp(query.operator + ".*",'i') };
   }
   if (query.voucherId) {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
@@ -91,13 +91,24 @@ await Promise.all(
     );
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-console.log(activeDeal.bonusPrice)
+
 reservations[index] = {
   ...reservations[index],
   resBonus:diffDays*activeDeal.bonusPrice,
 };
+reservation.additionalServices.map((service,i) => {
+  if (activeDeal[service]) {
+    reservations[index][i]  = {
+    ...reservations[index][i]  ,
+    addService:reservation.additionalServices[i],
+    serviceCost:-1*activeDeal[service],
+    
+  };
+}
+});
   })
 );
+
 
 
 
