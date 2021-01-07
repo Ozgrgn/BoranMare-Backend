@@ -20,8 +20,9 @@ router.post(
   validator,
   MessageController.addMessage
 );
+
 router.get(
-  "/:user",
+  "/",
   routeGuard({
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
@@ -29,7 +30,20 @@ router.get(
       AuthModel.TYPE_REGION_MANAGER,
     ],
   }),
-  param(["user"]).optional(),
+  validator,
+  MessageController.getAllMessages
+);
+
+router.get(
+  "/:userId",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param(["userId"]).optional(),
   MessageController.getMessages
 );
 

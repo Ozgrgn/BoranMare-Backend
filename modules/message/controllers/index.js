@@ -23,6 +23,17 @@ const getMessages = async (req, res) => {
   return res.json({ status: true, messages });
 };
 
+const getAllMessages = async (req, res) => {
+  const [messages_err, messages] = await promiseHandler(
+    MessageService.getAllMessages()
+  );
+  if (messages_err) {
+    return res.json({ status: false, message: messages_err });
+  }
+
+  return res.json({ status: true, messages });
+};
+
 const setSeenMessage = async (req, res) => {
   const { messageId, userId } = req.params;
   const [message_err, message] = await promiseHandler(
@@ -38,4 +49,5 @@ module.exports = {
   addMessage,
   getMessages,
   setSeenMessage,
+  getAllMessages,
 };

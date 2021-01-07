@@ -41,6 +41,7 @@ const roomRouter = require("./modules/room/routes");
 const reservationRouter = require("./modules/reservation/routes");
 const authRouter = require("./modules/auth/routes");
 const messageRouter = require("./modules/message/routes");
+const operatorRouter = require("./modules/operator/routes");
 
 //////////////
 //////////////
@@ -54,6 +55,7 @@ app.use("/room", roomRouter);
 app.use("/reservation", reservationRouter);
 app.use("/auth", authRouter);
 app.use("/message", messageRouter);
+app.use("/operator", operatorRouter);
 
 app.get("/", (req, res) => {
   res.json({});
