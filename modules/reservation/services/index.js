@@ -2,6 +2,7 @@ const { Reservation } = require("../model/index");
 const MailService = require("../../mail/services");
 const UserService = require("../../user/services");
 const RoomService = require("../../room/services");
+const OperatorService = require("../../operator/services");
 const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
@@ -85,17 +86,27 @@ await Promise.all(
       reservation.room,
       reservation.checkIn
     );
+
     const diffTime = Math.abs(
       new Date(reservation.checkOut) -
         new Date(reservation.checkIn)
     );
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = (diffTime / (1000 * 60 * 60 * 24));
     
 
 reservations[index] = {
   ...reservations[index],
-  resBonus:diffDays*activeDeal.bonusPrice,
+  resBonus:Math.ceil(diffDays*activeDeal.bonusPrice),
 };
+const operators= await OperatorService.getOperators()
+operators.map((op)=>{
+  if(reservation.operator==op._id){
+    reservations[index]  = {
+      ...reservations[index],
+      operatorName:op.name,
+  };
+}})
+
 reservation.additionalServices.map((service,i) => {
   if (activeDeal[service]) {
     reservations[index][i]  = {
@@ -106,12 +117,10 @@ reservation.additionalServices.map((service,i) => {
   };
 }
 });
+
+
   })
 );
-
-
-
-
   const count = await Reservation.countDocuments(query);
 
   return { reservations, count };
@@ -181,6 +190,7 @@ const disableReservationWithById = async (reservationId) => {
     { _id: reservationId },
     { approvedStatus: false }
   );
+  console.log("asddga")
   return true;
 };
 const enableReservationWithById = async (reservationId) => {
@@ -191,7 +201,7 @@ const enableReservationWithById = async (reservationId) => {
       new: true,
     }
   );
-
+  console.log("asddga")
   return true;
 };
 
@@ -199,10 +209,16 @@ const changeResStatusWithById = async (reservationId, reservationStatus) => {
   await Reservation.updateOne(
     { _id: reservationId },
     { reservationStatus: reservationStatus }
+
   );
 
   return true;
 };
+
+const getAllReservations = async () => {
+
+  return Reservation.find();
+  }
 module.exports = {
   addReservation,
   getReservations,
@@ -213,4 +229,5 @@ module.exports = {
   disableReservationWithById,
   enableReservationWithById,
   changeResStatusWithById,
+  getAllReservations
 };

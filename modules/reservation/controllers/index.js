@@ -53,7 +53,7 @@ const getReservations = async (req, res) => {
       reservationsQuery,
       {
         queryOptions: { limit, skip },
-        sortOptions: sort ? JSON.parse(sort) : { reservationDate: -1 },
+        sortOptions: sort ? JSON.parse(sort) : { approvedStatus: -1 },
       },
       user
     )
@@ -65,6 +65,19 @@ const getReservations = async (req, res) => {
 
   return res.json({ status: true, ...reservations });
 };
+
+const getAllReservations= async (req, res) => {
+  const [reservations_err, reservations] = await promiseHandler(
+    ReservationService.getAllReservations()
+  );
+  if (reservations_err) {
+    return res.json({ status: false, message: reservations_err });
+  }
+
+  return res.json({ status: true, reservations });
+};
+
+
 const getUserBalanceWithByuserId = async (req, res) => {
   const [balance_err, balance] = await promiseHandler(
     ReservationService.getUserBalanceWithByuserId(req.params.userId)
@@ -186,4 +199,5 @@ module.exports = {
   disableReservationWithById,
   enableReservationWithById,
   changeResStatusWithById,
+  getAllReservations
 };

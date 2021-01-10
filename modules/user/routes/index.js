@@ -9,7 +9,9 @@ const routeGuard = require("../../auth/middlewares/guard");
 router.get(
   "/",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN, AuthModel.TYPE_REGION_MANAGER],
+    allowedTypes: [ AuthModel.TYPE_ADMIN,
+     
+      AuthModel.TYPE_REGION_MANAGER,],
   }),
   query(["email", "fullName", "name", "phone", "country", "sort"])
     .optional()
@@ -44,6 +46,20 @@ router.put(
   body(["user"]).exists(),
   validator,
   UserController.updateUserWithById
+);
+router.post(
+  "/:userId/change-user-status",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+    
+  }),
+  param("userId").exists().isMongoId(),
+  body(["userStatus"]).exists(),
+  validator,
+  UserController.changeUserStatusWithById
 );
 
 module.exports = router;

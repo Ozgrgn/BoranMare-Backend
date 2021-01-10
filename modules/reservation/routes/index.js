@@ -54,6 +54,18 @@ router.get(
   validator,
   ReservationController.getReservations
 );
+router.get(
+  "/all",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  validator,
+  ReservationController.getAllReservations
+);
 
 router.get(
   "/:reservationId",
@@ -90,6 +102,7 @@ router.put(
   }),
   param("reservationId").exists().isMongoId(),
   body(["reservation"]).exists(),
+    body(["additionalServices"]).optional().isArray(),
   validator,
   ReservationController.updateReservationById
 );
@@ -97,25 +110,33 @@ router.put(
 router.get(
   "/:reservationId/disable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,
+    AuthModel.TYPE_REGION_MANAGER,],
   }),
   ReservationController.disableReservationWithById
 );
 router.get(
   "/:reservationId/enable",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,],
   }),
   ReservationController.enableReservationWithById
 );
 router.post(
   "/:reservationId/change-res-status",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
   }),
   param("reservationId").exists().isMongoId(),
   body(["reservationStatus"]).exists(),
   validator,
   ReservationController.changeResStatusWithById
+ 
 );
+
 module.exports = router;

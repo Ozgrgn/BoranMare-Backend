@@ -28,7 +28,7 @@ router.get("/", DealController.getDeals);
 router.delete(
   "/:dealId",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,AuthModel.TYPE_REGION_MANAGER,],
   }),
   param("dealId").exists().isMongoId(),
   validator,
@@ -38,7 +38,7 @@ router.delete(
 router.put(
   "/:dealId",
   routeGuard({
-    allowedTypes: [AuthModel.TYPE_ADMIN],
+    allowedTypes: [AuthModel.TYPE_ADMIN,AuthModel.TYPE_REGION_MANAGER,],
   }),
   param("dealId").exists().isMongoId(),
   body(["deal"]).exists(),

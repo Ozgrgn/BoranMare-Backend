@@ -25,6 +25,16 @@ const addMessage = async (messageDetails) => {
 const getMessages = async (userId) => {
   return Message.find({ "users.user": userId });
 };
+
+const getAllMessages = async () => {
+
+  return Message.find();
+  }
+
+
+
+
+
 const getMessageWithById = async (messageId) => {
   return Message.findById(messageId).exec();
 };
@@ -53,4 +63,5 @@ module.exports = {
   getMessages,
   getMessageWithById,
   setSeenMessage,
+  getAllMessages
 };

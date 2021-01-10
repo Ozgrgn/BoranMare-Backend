@@ -66,9 +66,30 @@ const updateUserWithById = async (req, res) => {
 
   return res.json({ status: true, updated_user });
 };
+const changeUserStatusWithById = async (req, res) => {
+  const userId = req.params.userId;
+  const userStatus = req.body.userStatus;
 
+  const [err, user] = await promiseHandler(
+    UserService.changeUserStatusWithById(userId, userStatus)
+  );
+
+  if (err) {
+    return res.json({ status: false, message: err });
+  }
+
+  const [user_err, updated_user] = await promiseHandler(
+    UserService.changeUserStatusWithById(userId, userStatus)
+  );
+
+  if (user_err) {
+    return res.json({ status: false, message: user_err });
+  }
+  return res.json({ status: true });
+};
 module.exports = {
   getUsers,
   getUserWithById,
   updateUserWithById,
+  changeUserStatusWithById,
 };
