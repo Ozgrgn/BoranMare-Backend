@@ -27,13 +27,8 @@ const getMessages = async (userId) => {
 };
 
 const getAllMessages = async () => {
-
-  return Message.find();
-  }
-
-
-
-
+  return Message.find().sort({ created_at: -1 });
+};
 
 const getMessageWithById = async (messageId) => {
   return Message.findById(messageId).exec();
@@ -63,5 +58,5 @@ module.exports = {
   getMessages,
   getMessageWithById,
   setSeenMessage,
-  getAllMessages
+  getAllMessages,
 };
