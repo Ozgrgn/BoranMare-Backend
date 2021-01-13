@@ -89,9 +89,38 @@ const changeUserStatusWithById = async (req, res) => {
   }
   return res.json({ status: true });
 };
+
+const addReceiptWithById = async (req, res) => {
+  const userId = req.params.userId;
+  const receiptDate = req.body.receiptDate;
+  const description = req.body.description;
+  const amount = req.body.amount;
+
+  const [err, user] = await promiseHandler(
+    UserService.addReceiptWithById(userId, receiptDate, description, amount)
+  );
+
+  if (err) {
+    return res.json({ status: false, message: err });
+  }
+
+  return res.json({ status: true });
+};
+const getAgencies= async (req, res) => {
+  const [users_err, users] = await promiseHandler(
+    UserService.getAgencies()
+  );
+  if (users_err) {
+    return res.json({ status: false, message: users_err });
+  }
+
+  return res.json({ status: true, users });
+};
 module.exports = {
   getUsers,
   getUserWithById,
   updateUserWithById,
   changeUserStatusWithById,
+  addReceiptWithById,
+  getAgencies
 };

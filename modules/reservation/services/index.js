@@ -19,6 +19,7 @@ const addReservation = async (reservationDetails) => {
   }
 
   const agency = await UserService.getUserWithById(reservationDetails.agency);
+  const operator=await OperatorService.getOperatorWithById(reservationDetails.operator);
 
   const reservation = await new Reservation({
     ...reservationDetails,
@@ -57,9 +58,7 @@ const getReservations = async (query = {}, options = {}, user) => {
   if (query.resId) {
     query.resId = { $regex: RegExp(query.resId + ".*") };
   }
-  if (query.operator) {
-    query.operator = { $regex: RegExp(query.operator + ".*",'i') };
-  }
+
   if (query.voucherId) {
     query.voucherId = { $regex: RegExp(query.voucherId + ".*") };
   }
@@ -73,7 +72,8 @@ const getReservations = async (query = {}, options = {}, user) => {
   }
 
   const reservations = await Reservation.find(query, {}, queryOptions)
-    .populate("room")
+  .populate("operator")  
+  .populate("room")
     .populate("agency")
     .sort(sortOptions)
     .lean()
@@ -219,6 +219,7 @@ const getAllReservations = async () => {
 
   return Reservation.find();
   }
+  
 module.exports = {
   addReservation,
   getReservations,

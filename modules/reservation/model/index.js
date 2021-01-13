@@ -10,7 +10,7 @@ const STATUS = {
 const ReservationSchema = new mongoose.Schema(
   {
     voucherId: { type: String, required: true },
-    operator: { type: String, required: true },
+   
     room: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "rooms",
@@ -38,7 +38,12 @@ const ReservationSchema = new mongoose.Schema(
       default: STATUS.STATUS_PENDING,
     },
     approvedStatus: { type: Boolean, default: false },
-
+    operator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "operators",
+      required: true,
+    },
+    
     agency: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",

@@ -16,12 +16,13 @@ router.post(
       AuthModel.TYPE_REGION_MANAGER,
     ],
   }),
-  body(["voucherId", "room", "operator"]).exists().isString(),
+  body(["voucherId", "room","operator"]).exists().isString(),
   body(["names", "notes"]).optional().isString(),
   body(["adultPax", "child1Pax", "child2Pax"]).optional().toInt().isInt(),
   body(["adultPax"]).exists().toInt().isInt(),
   body(["checkIn", "checkOut", "reservationDate"]).exists().isISO8601(),
   body(["agency"]).exists().isMongoId(),
+
   body(["additionalServices"]).optional().isArray(),
   validator,
   ReservationController.addReservation

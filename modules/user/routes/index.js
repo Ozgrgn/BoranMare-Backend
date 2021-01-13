@@ -21,6 +21,18 @@ router.get(
   UserController.getUsers
 );
 router.get(
+  "/agencies",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  validator,
+  UserController.getAgencies
+);
+router.get(
   "/:userId",
   routeGuard({
     allowedTypes: [
@@ -60,6 +72,21 @@ router.post(
   body(["userStatus"]).exists(),
   validator,
   UserController.changeUserStatusWithById
+);
+router.post(
+  "/:userId/receipt",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param("userId").exists().isMongoId(),
+  body(["description"]).exists(),
+  body(["amount"]).exists().toInt().isInt(),
+  body(["receiptDate"]).exists().isISO8601(),
+  validator,
+  UserController.addReceiptWithById
 );
 
 module.exports = router;

@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema(
       ],
       default: STATUS.STATUS_PENDING,
     },
+    receipt: { type:Array,default:[]}
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
