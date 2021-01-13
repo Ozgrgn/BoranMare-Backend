@@ -13,7 +13,7 @@ router.get(
      
       AuthModel.TYPE_REGION_MANAGER,],
   }),
-  query(["email", "fullName", "name", "phone", "country", "sort"])
+  query(["email", "fullName", "name", "phone", "country", "sort","userStatus"])
     .optional()
     .isString(),
   query(["balance", "limit", "skip"]).optional().toInt().isInt(),

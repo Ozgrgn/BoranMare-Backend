@@ -14,6 +14,7 @@ const getUsers = async (req, res) => {
     limit,
     sort,
     skip,
+    userStatus,
   } = req.query;
   const usersQuery = _.omitBy(
     {
@@ -23,6 +24,7 @@ const getUsers = async (req, res) => {
       phone,
       country,
       balance,
+      userStatus,
     },
     (a) => a === undefined
   );
