@@ -132,7 +132,7 @@ const moment = Date.now();
 const getAgencies = async () => {
 
   return User.find(
-  
+  {userType:"AGENCY"}
   );
   }
 module.exports = {

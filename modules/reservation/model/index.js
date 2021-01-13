@@ -54,7 +54,7 @@ const ReservationSchema = new mongoose.Schema(
       ref: "countries",
       required: false,
     },
-
+    paid:{type:Boolean, default:false},
     resId: { type: String, default: 3000 },
     additionalServices: { type: Array, default: [] },
   },

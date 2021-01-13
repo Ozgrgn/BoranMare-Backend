@@ -80,6 +80,7 @@ const getReservations = async (query = {}, options = {}, user) => {
     .exec();
 
 await Promise.all(
+  
   reservations.map(async(reservation,index)=> {
     const activeDeal = await DealService.getActiveDeal(
       reservation['agency']['_id'],
@@ -92,32 +93,29 @@ await Promise.all(
         new Date(reservation.checkIn)
     );
     const diffDays = (diffTime / (1000 * 60 * 60 * 24));
-    
+    reservation.resBonus=Math.ceil(diffDays*activeDeal.bonusPrice)
 
 reservations[index] = {
   ...reservations[index],
-  resBonus:Math.ceil(diffDays*activeDeal.bonusPrice),
+  resBonus:reservation.resBonus,
 };
-const operators= await OperatorService.getOperators()
-operators.map((op)=>{
-  if(reservation.operator==op._id){
-    reservations[index]  = {
-      ...reservations[index],
-      operatorName:op.name,
-  };
-}})
-
+reservation.totalServiceCost=0
 reservation.additionalServices.map((service,i) => {
+ reservation.totalServiceCost=reservation.totalServiceCost-activeDeal[service]
+ console.log(reservation.totalServiceCost)
   if (activeDeal[service]) {
     reservations[index][i]  = {
     ...reservations[index][i]  ,
     addService:reservation.additionalServices[i],
-    serviceCost:-1*activeDeal[service],
-    
+    serviceCost:-1*activeDeal[service],    
   };
 }
-});
 
+});
+reservations[index]  = {
+  ...reservations[index]  ,
+  resTotal:reservation.resBonus+reservation.totalServiceCost
+} 
 
   })
 );
