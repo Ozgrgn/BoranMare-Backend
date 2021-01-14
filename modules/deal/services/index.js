@@ -22,6 +22,7 @@ const updateDealWithById = async (dealId, deal) => {
 
 const getActiveDeal = async (agencyId, room, checkIn) => {
   let filter = {};
+  console.log(agencyId,room,checkIn)
 
   const agency = await UserService.getUserWithById(agencyId);
 

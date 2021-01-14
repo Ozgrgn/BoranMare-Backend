@@ -146,6 +146,14 @@ const getUserBalanceWithByuserId = async (userId) => {
   }
 
   let balance = 0;
+  let serviceCost=0;
+  let totalAmount=0;
+  user.receipt.map((receipt)=>{
+    if(receipt){
+    totalAmount=totalAmount+receipt.amount
+    console.log(totalAmount)
+  }
+  })
   const reservations = await Reservation.find({
     approvedStatus: true,
     agency: user._id,
@@ -158,23 +166,28 @@ const getUserBalanceWithByuserId = async (userId) => {
         user._id,
         reservation.room,
         reservation.checkIn
-      );
+      
+      );   
       const diffTime = Math.abs(
         new Date(reservation.checkOut) -
           new Date(reservation.checkIn)
       );
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
+   
       balance = balance +(diffDays*activeDeal.bonusPrice);
+     
 
       reservation.additionalServices.map((service) => {
         if (activeDeal[service]) {
           balance = balance - activeDeal[service];
+          serviceCost = serviceCost + activeDeal[service]
+         
         }
       });
+     
     })
   ).then(() => {
-    return balance;
+    return {balance,serviceCost,totalAmount};
   });
 };
 const updateReservationById = async (reservationId, reservation) => {
@@ -207,6 +220,7 @@ const changeResStatusWithById = async (reservationId, reservationStatus) => {
   await Reservation.updateOne(
     { _id: reservationId },
     { reservationStatus: reservationStatus }
+   
 
   );
 

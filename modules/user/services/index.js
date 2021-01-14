@@ -2,6 +2,8 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../model/index");
 const { Reservation } = require("../../reservation/model");
+const { create } = require("lodash");
+const { async } = require("crypto-random-string");
 const getUsers = async (query = {}, options = {}, user) => {
   const { queryOptions, sortOptions } = options;
   if (query.fullName) {
@@ -11,10 +13,10 @@ const getUsers = async (query = {}, options = {}, user) => {
   if (query.name) {
     query.name = { $regex: RegExp(query.name + ".*", 'i') };
   }
-  console.log(user.userType)
+
   if (user.userType == "REGION_MANAGER") {
     const getUser = await getUserWithById(user.userId);
-    console.log(getUser)
+
 
     query.country = getUser.country;
   }
@@ -122,13 +124,40 @@ const moment = Date.now();
             "createDate":moment, "receiptDate": receiptDate, "description": description, "amount": amount
           }
         ]
-
       }
     }
   );
-
   return true;
 };
+
+const deleteOneReceipt= async(userId,createDate)=>{
+//  await User.updateOne(
+//    { _id: userId },
+//    {
+//      $pull: {
+//        receipt: { $elemMatch: {
+//         createDate:createDate
+//        }}
+        
+        
+//       }
+//   }
+//  );
+const result=await User.findByIdAndUpdate({_id:userId},
+  {
+    $pull: {
+      receipt:{createDate:createDate}
+    }
+  },{new:true});
+if(result)
+console.log(result)
+
+
+  return true;
+}
+
+
+
 const getAgencies = async () => {
 
   return User.find(
@@ -142,5 +171,6 @@ module.exports = {
   getUsersOnlyIds,
   changeUserStatusWithById,
   addReceiptWithById,
+  deleteOneReceipt,
   getAgencies
 };

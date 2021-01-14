@@ -106,6 +106,23 @@ const addReceiptWithById = async (req, res) => {
 
   return res.json({ status: true });
 };
+
+const deleteOneReceipt = async (req, res) => {
+  const userId = req.params.userId;
+  const createDate = req.params.createDate;
+  
+  const [err, user] = await promiseHandler(
+    UserService.deleteOneReceipt(userId, createDate)
+  );
+
+  if (err) {
+    return res.json({ status: false, message: err });
+  }
+
+  return res.json({ status: true,user });
+};
+
+
 const getAgencies= async (req, res) => {
   const [users_err, users] = await promiseHandler(
     UserService.getAgencies()
@@ -122,5 +139,6 @@ module.exports = {
   updateUserWithById,
   changeUserStatusWithById,
   addReceiptWithById,
+  deleteOneReceipt,
   getAgencies
 };

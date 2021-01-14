@@ -88,5 +88,18 @@ router.post(
   validator,
   UserController.addReceiptWithById
 );
+router.delete(
+  "/:userId/receipt/:createDate",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param("userId").exists().isMongoId(),
+  param(["createDate"]).exists(),
+  validator,
+  UserController.deleteOneReceipt
+);
 
 module.exports = router;
