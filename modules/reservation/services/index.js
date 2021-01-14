@@ -7,6 +7,7 @@ const mailConfig = require("../../../config.json");
 const promiseHandler = require("../../utilities/promiseHandler");
 const DealService = require("../../deal/services");
 const { Deal } = require("../../deal/model");
+
 const addReservation = async (reservationDetails) => {
   const lastReservation = await Reservation.findOne(
     {},
@@ -19,7 +20,9 @@ const addReservation = async (reservationDetails) => {
   }
 
   const agency = await UserService.getUserWithById(reservationDetails.agency);
-  const operator=await OperatorService.getOperatorWithById(reservationDetails.operator);
+  const operator = await OperatorService.getOperatorWithById(
+    reservationDetails.operator
+  );
 
   const reservation = await new Reservation({
     ...reservationDetails,
@@ -72,53 +75,80 @@ const getReservations = async (query = {}, options = {}, user) => {
   }
 
   const reservations = await Reservation.find(query, {}, queryOptions)
-  .populate("operator")  
-  .populate("room")
-    .populate("agency")
+    .populate(
+      "operator",
+      null,
+      null,
+      null,
+      sortOptions.operator
+        ? {
+            sort: { name: sortOptions.operator },
+          }
+        : null
+    )
+    .populate(
+      "room",
+      null,
+      null,
+      null,
+      sortOptions.room
+        ? {
+            sort: { title: sortOptions.room },
+          }
+        : null
+    )
+    .populate(
+      "agency",
+      null,
+      null,
+      null,
+      sortOptions.agency
+        ? {
+            sort: { name: sortOptions.agency },
+          }
+        : null
+    )
     .sort(sortOptions)
     .lean()
     .exec();
 
-await Promise.all(
-  
-  reservations.map(async(reservation,index)=> {
-    const activeDeal = await DealService.getActiveDeal(
-      reservation['agency']['_id'],
-      reservation.room,
-      reservation.checkIn
-    );
+  await Promise.all(
+    reservations.map(async (reservation, index) => {
+      const activeDeal = await DealService.getActiveDeal(
+        reservation["agency"]["_id"],
+        reservation.room,
+        reservation.checkIn
+      );
 
-    const diffTime = Math.abs(
-      new Date(reservation.checkOut) -
-        new Date(reservation.checkIn)
-    );
-    const diffDays = (diffTime / (1000 * 60 * 60 * 24));
-    reservation.resBonus=Math.ceil(diffDays*activeDeal.bonusPrice)
+      const diffTime = Math.abs(
+        new Date(reservation.checkOut) - new Date(reservation.checkIn)
+      );
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      reservation.resBonus = Math.ceil(diffDays * activeDeal.bonusPrice);
 
-reservations[index] = {
-  ...reservations[index],
-  resBonus:reservation.resBonus,
-};
-reservation.totalServiceCost=0
-reservation.additionalServices.map((service,i) => {
- reservation.totalServiceCost=reservation.totalServiceCost-activeDeal[service]
- console.log(reservation.totalServiceCost)
-  if (activeDeal[service]) {
-    reservations[index][i]  = {
-    ...reservations[index][i]  ,
-    addService:reservation.additionalServices[i],
-    serviceCost:-1*activeDeal[service],    
-  };
-}
+      reservations[index] = {
+        ...reservations[index],
+        resBonus: reservation.resBonus,
+      };
+      reservation.totalServiceCost = 0;
+      reservation.additionalServices.map((service, i) => {
+        reservation.totalServiceCost =
+          reservation.totalServiceCost - activeDeal[service];
 
-});
-reservations[index]  = {
-  ...reservations[index]  ,
-  resTotal:reservation.resBonus+reservation.totalServiceCost
-} 
-
-  })
-);
+        if (activeDeal[service]) {
+          reservations[index][i] = {
+            ...reservations[index][i],
+            addService: reservation.additionalServices[i],
+            serviceCost: -1 * activeDeal[service],
+          };
+        }
+      });
+      reservations[index] = {
+        ...reservations[index],
+        resTotal: reservation.resBonus + reservation.totalServiceCost,
+      };
+    })
+  );
   const count = await Reservation.countDocuments(query);
 
   return { reservations, count };
@@ -146,14 +176,13 @@ const getUserBalanceWithByuserId = async (userId) => {
   }
 
   let balance = 0;
-  let serviceCost=0;
-  let totalAmount=0;
-  user.receipt.map((receipt)=>{
-    if(receipt){
-    totalAmount=totalAmount+receipt.amount
-    console.log(totalAmount)
-  }
-  })
+  let serviceCost = 0;
+  let totalAmount = 0;
+  user.receipt.map((receipt) => {
+    if (receipt) {
+      totalAmount = totalAmount + receipt.amount;
+    }
+  });
   const reservations = await Reservation.find({
     approvedStatus: true,
     agency: user._id,
@@ -166,28 +195,23 @@ const getUserBalanceWithByuserId = async (userId) => {
         user._id,
         reservation.room,
         reservation.checkIn
-      
-      );   
+      );
       const diffTime = Math.abs(
-        new Date(reservation.checkOut) -
-          new Date(reservation.checkIn)
+        new Date(reservation.checkOut) - new Date(reservation.checkIn)
       );
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-   
-      balance = balance +(diffDays*activeDeal.bonusPrice);
-     
+
+      balance = balance + diffDays * activeDeal.bonusPrice;
 
       reservation.additionalServices.map((service) => {
         if (activeDeal[service]) {
           balance = balance - activeDeal[service];
-          serviceCost = serviceCost + activeDeal[service]
-         
+          serviceCost = serviceCost + activeDeal[service];
         }
       });
-     
     })
   ).then(() => {
-    return {balance,serviceCost,totalAmount};
+    return { balance, serviceCost, totalAmount };
   });
 };
 const updateReservationById = async (reservationId, reservation) => {
@@ -201,7 +225,7 @@ const disableReservationWithById = async (reservationId) => {
     { _id: reservationId },
     { approvedStatus: false }
   );
-  console.log("asddga")
+
   return true;
 };
 const enableReservationWithById = async (reservationId) => {
@@ -212,7 +236,7 @@ const enableReservationWithById = async (reservationId) => {
       new: true,
     }
   );
-  console.log("asddga")
+
   return true;
 };
 
@@ -220,18 +244,15 @@ const changeResStatusWithById = async (reservationId, reservationStatus) => {
   await Reservation.updateOne(
     { _id: reservationId },
     { reservationStatus: reservationStatus }
-   
-
   );
 
   return true;
 };
 
 const getAllReservations = async () => {
-
   return Reservation.find();
-  }
-  
+};
+
 module.exports = {
   addReservation,
   getReservations,
@@ -242,5 +263,5 @@ module.exports = {
   disableReservationWithById,
   enableReservationWithById,
   changeResStatusWithById,
-  getAllReservations
+  getAllReservations,
 };

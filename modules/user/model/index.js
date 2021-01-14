@@ -15,7 +15,6 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
-    
 
     emailAuthCode: { type: String, required: false },
     country: {
@@ -41,7 +40,7 @@ const UserSchema = new mongoose.Schema(
       ],
       default: STATUS.STATUS_PENDING,
     },
-    receipt: { type:Array,default:[]}
+    receipt: { type: Array, default: [] },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

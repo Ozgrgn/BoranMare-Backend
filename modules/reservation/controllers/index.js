@@ -66,7 +66,7 @@ const getReservations = async (req, res) => {
   return res.json({ status: true, ...reservations });
 };
 
-const getAllReservations= async (req, res) => {
+const getAllReservations = async (req, res) => {
   const [reservations_err, reservations] = await promiseHandler(
     ReservationService.getAllReservations()
   );
@@ -76,7 +76,6 @@ const getAllReservations= async (req, res) => {
 
   return res.json({ status: true, reservations });
 };
-
 
 const getUserBalanceWithByuserId = async (req, res) => {
   const [balance_err, balance] = await promiseHandler(
@@ -199,5 +198,5 @@ module.exports = {
   disableReservationWithById,
   enableReservationWithById,
   changeResStatusWithById,
-  getAllReservations
+  getAllReservations,
 };
