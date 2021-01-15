@@ -75,40 +75,14 @@ const getReservations = async (query = {}, options = {}, user) => {
   }
 
   const reservations = await Reservation.find(query, {}, queryOptions)
-    .populate(
-      "operator",
-      null,
-      null,
-      null,
-      sortOptions.operator
-        ? {
-            sort: { name: sortOptions.operator },
-          }
+    .populate("operator")
+    .populate("room")
+    .populate("agency")
+    .sort(
+      !sortOptions.operator && !sortOptions.room && !sortOptions.agency
+        ? sortOptions
         : null
     )
-    .populate(
-      "room",
-      null,
-      null,
-      null,
-      sortOptions.room
-        ? {
-            sort: { title: sortOptions.room },
-          }
-        : null
-    )
-    .populate(
-      "agency",
-      null,
-      null,
-      null,
-      sortOptions.agency
-        ? {
-            sort: { name: sortOptions.agency },
-          }
-        : null
-    )
-    .sort(sortOptions)
     .lean()
     .exec();
 
@@ -149,6 +123,42 @@ const getReservations = async (query = {}, options = {}, user) => {
       };
     })
   );
+
+  if (sortOptions.operator || sortOptions.room || sortOptions.agency) {
+    let key;
+    if (sortOptions.operator) {
+      key = "name";
+    }
+    if (sortOptions.room) {
+      key = "title";
+    }
+    if (sortOptions.agency) {
+      key = "fullName";
+    }
+
+    reservations.sort((a, b) => {
+      if (sortOptions[Object.keys(sortOptions)[0]] == 1) {
+        var nameA = a[Object.keys(sortOptions)[0]][key].toUpperCase(); // ignore upper and lowercase
+        var nameB = b[Object.keys(sortOptions)[0]][key].toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+      } else {
+        var nameA = a[Object.keys(sortOptions)[0]][key].toUpperCase(); // ignore upper and lowercase
+        var nameB = b[Object.keys(sortOptions)[0]][key].toUpperCase(); // ignore upper and lowercase
+        if (nameA > nameB) {
+          return -1;
+        }
+        if (nameA < nameB) {
+          return 1;
+        }
+      }
+    });
+  }
+
   const count = await Reservation.countDocuments(query);
 
   return { reservations, count };
