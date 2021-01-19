@@ -77,6 +77,7 @@ router.post(
   routeGuard({
     allowedTypes: [
       AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
       AuthModel.TYPE_REGION_MANAGER,
     ],
   }),

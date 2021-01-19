@@ -33,6 +33,17 @@ const getAllMessages = async (req, res) => {
 
   return res.json({ status: true, messages });
 };
+const getCountryMessages = async (req, res) => {
+  const {country} = req.params;
+  const [messages_err, messages] = await promiseHandler(
+    MessageService.getCountryMessages(country)
+  );
+  if (messages_err) {
+    return res.json({ status: false, message: messages_err });
+  }
+
+  return res.json({ status: true, messages });
+};
 
 const setSeenMessage = async (req, res) => {
   const { messageId, userId } = req.params;
@@ -50,4 +61,5 @@ module.exports = {
   getMessages,
   setSeenMessage,
   getAllMessages,
+  getCountryMessages,
 };

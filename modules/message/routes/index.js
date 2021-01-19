@@ -33,6 +33,19 @@ router.get(
   validator,
   MessageController.getAllMessages
 );
+router.get(
+  "/:country",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_AGENCY,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  param(["country"]).optional(),
+  validator,
+  MessageController.getCountryMessages
+);
 
 router.get(
   "/:userId",

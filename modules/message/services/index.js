@@ -1,6 +1,8 @@
 const { Message } = require("../model/index");
+const { User } = require("../../user/model");
 const UserService = require("../../user/services");
 const mongoose = require("mongoose");
+const { async } = require("crypto-random-string");
 const ObjectId = mongoose.Types.ObjectId;
 
 const addMessage = async (messageDetails) => {
@@ -27,9 +29,36 @@ const getMessages = async (userId) => {
 };
 
 const getAllMessages = async () => {
-  return Message.find().sort({ created_at: -1 });
+  return Message.find().sort({ created_at: -1 })
+  
 };
 
+const getCountryMessages = async (country) => {
+  const messages=await Message.find().sort({ created_at: -1 })
+  
+  await Promise.all(
+    messages.map(async(message,index)=>{
+      const users=await User.find({country:country})
+    users.map((user)=>{
+      message.users.map((m_user)=>{
+      if(m_user.user==user._id){
+        messages[index]={
+          ...messages[index],
+          country:country
+        }
+        
+      }
+
+      })
+
+
+    })
+    })
+  )
+  return messages;
+ 
+  
+};
 const getMessageWithById = async (messageId) => {
   return Message.findById(messageId).exec();
 };
@@ -59,4 +88,5 @@ module.exports = {
   getMessageWithById,
   setSeenMessage,
   getAllMessages,
+  getCountryMessages,
 };

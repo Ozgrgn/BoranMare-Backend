@@ -98,8 +98,9 @@ const getReservations = async (query = {}, options = {}, user) => {
         new Date(reservation.checkOut) - new Date(reservation.checkIn)
       );
       const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      if(activeDeal.bonusPrice){
       reservation.resBonus = Math.ceil(diffDays * activeDeal.bonusPrice);
-
+    }
       reservations[index] = {
         ...reservations[index],
         resBonus: reservation.resBonus,
