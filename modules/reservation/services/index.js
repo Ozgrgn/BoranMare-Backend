@@ -105,23 +105,24 @@ const getReservations = async (query = {}, options = {}, user) => {
         ...reservations[index],
         resBonus: reservation.resBonus,
       };
-      reservation.totalServiceCost = 0;
-      reservation.additionalServices.map((service, i) => {
-        reservation.totalServiceCost =
-          reservation.totalServiceCost - activeDeal[service];
+      // ADDITIONAL SERVICES
+      // reservation.totalServiceCost = 0;
+      // reservation.additionalServices.map((service, i) => {
+      //   reservation.totalServiceCost =
+      //     reservation.totalServiceCost - activeDeal[service];
 
-        if (activeDeal[service]) {
-          reservations[index][i] = {
-            ...reservations[index][i],
-            addService: reservation.additionalServices[i],
-            serviceCost: -1 * activeDeal[service],
-          };
-        }
-      });
-      reservations[index] = {
-        ...reservations[index],
-        resTotal: reservation.resBonus + reservation.totalServiceCost,
-      };
+      //   if (activeDeal[service]) {
+      //     reservations[index][i] = {
+      //       ...reservations[index][i],
+      //       addService: reservation.additionalServices[i],
+      //       serviceCost: -1 * activeDeal[service],
+      //     };
+      //   }
+      // });
+      // reservations[index] = {
+      //   ...reservations[index],
+      //   resTotal: reservation.resBonus + reservation.totalServiceCost,
+      // };
     })
   );
 
@@ -216,13 +217,13 @@ const getUserBalanceWithByuserId = async (userId) => {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       balance = balance + diffDays * activeDeal.bonusPrice;
-
-      reservation.additionalServices.map((service) => {
-        if (activeDeal[service]) {
-          balance = balance - activeDeal[service];
-          serviceCost = serviceCost + activeDeal[service];
-        }
-      });
+// ADDITIONAL SERVICES
+      // reservation.additionalServices.map((service) => {
+      //   if (activeDeal[service]) {
+      //     balance = balance - activeDeal[service];
+      //     serviceCost = serviceCost + activeDeal[service];
+      //   }
+      // });
     })
   ).then(() => {
     return { balance, serviceCost, totalAmount,totalPlusAmount };
