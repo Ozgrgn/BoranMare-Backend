@@ -189,9 +189,12 @@ const getUserBalanceWithByuserId = async (userId) => {
   let balance = 0;
   let serviceCost = 0;
   let totalAmount = 0;
+  let totalPlusAmount=0;
   user.receipt.map((receipt) => {
     if (receipt) {
       totalAmount = totalAmount + receipt.amount;
+      if (receipt.amount>0)
+      {totalPlusAmount=totalPlusAmount + receipt.amount}
     }
   });
   const reservations = await Reservation.find({
@@ -222,7 +225,7 @@ const getUserBalanceWithByuserId = async (userId) => {
       });
     })
   ).then(() => {
-    return { balance, serviceCost, totalAmount };
+    return { balance, serviceCost, totalAmount,totalPlusAmount };
   });
 };
 const updateReservationById = async (reservationId, reservation) => {

@@ -149,6 +149,9 @@ const deleteOneReceipt = async (userId, createDate) => {
 const getAgencies = async () => {
   return User.find({ userType: "AGENCY" });
 };
+const getManagers = async () => {
+  return User.find({ userType:{$ne:"AGENCY" }  }).populate("country");
+};
 module.exports = {
   getUsers,
   getUserWithById,
@@ -158,4 +161,5 @@ module.exports = {
   addReceiptWithById,
   deleteOneReceipt,
   getAgencies,
+  getManagers,
 };

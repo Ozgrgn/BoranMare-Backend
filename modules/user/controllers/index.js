@@ -133,6 +133,16 @@ const getAgencies= async (req, res) => {
 
   return res.json({ status: true, users });
 };
+const getManagers= async (req, res) => {
+  const [users_err, users] = await promiseHandler(
+    UserService.getManagers()
+  );
+  if (users_err) {
+    return res.json({ status: false, message: users_err });
+  }
+
+  return res.json({ status: true, users });
+};
 module.exports = {
   getUsers,
   getUserWithById,
@@ -140,5 +150,6 @@ module.exports = {
   changeUserStatusWithById,
   addReceiptWithById,
   deleteOneReceipt,
-  getAgencies
+  getAgencies,
+  getManagers
 };

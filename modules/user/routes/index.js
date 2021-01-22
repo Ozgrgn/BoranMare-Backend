@@ -32,6 +32,17 @@ router.get(
   UserController.getAgencies
 );
 router.get(
+  "/managers",
+  routeGuard({
+    allowedTypes: [
+      AuthModel.TYPE_ADMIN,
+      AuthModel.TYPE_REGION_MANAGER,
+    ],
+  }),
+  validator,
+  UserController.getManagers
+);
+router.get(
   "/:userId",
   routeGuard({
     allowedTypes: [
